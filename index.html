@@ -420,9 +420,113 @@
 
     .side {
       display: grid;
-      grid-template-rows: auto auto 1fr;
+      grid-template-rows: auto auto auto 1fr;
       gap: 18px;
       min-height: 0;
+    }
+
+    .queue-rail {
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+      overflow: auto;
+    }
+
+    .queue-item {
+      border-radius: 20px;
+      border: 1px solid rgba(255,255,255,.07);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      padding: 14px;
+      display: grid;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .queue-item::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: linear-gradient(180deg, var(--cyan), var(--violet));
+      opacity: .8;
+    }
+
+    .queue-item.critical::before { background: linear-gradient(180deg, #ff7b95, #ff5f7b); }
+    .queue-item.order::before { background: linear-gradient(180deg, #ffe07e, #ffd452); }
+
+    .queue-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .queue-rank {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 900;
+      color: var(--text);
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.08);
+      flex: 0 0 auto;
+    }
+
+    .queue-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .queue-machine {
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: -.02em;
+      margin-bottom: 4px;
+    }
+
+    .queue-item-name {
+      font-size: 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .queue-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .queue-chip {
+      border-radius: 14px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.06);
+      padding: 10px 11px;
+    }
+
+    .queue-chip-label {
+      color: var(--muted);
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      margin-bottom: 6px;
+    }
+
+    .queue-chip-value {
+      font-size: 15px;
+      font-weight: 900;
+      letter-spacing: -.03em;
     }
 
     .ticker {
@@ -710,6 +814,18 @@
           <div class="ticker-text" id="tickerText">Waiting on initial CSV pull.</div>
         </div>
 
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">Order Soonest to Latest</div>
+              <div class="panel-sub">Sorted by days left and runout pressure</div>
+            </div>
+            <div class="panel-sub" id="runoutSummary">Waiting on live feed</div>
+          </div>
+          <div class="queue-rail" id="runoutRail"></div>
+          <div class="empty" id="runoutEmpty" style="display:none; padding:14px;">No runout queue data yet.</div>
+        </div>
+
         <div class="panel" style="padding:16px; gap:14px;">
           <div>
             <div class="panel-title">Machine Snapshot</div>
@@ -757,6 +873,9 @@
       priorityError: document.getElementById('priorityError'),
       machineCards: document.getElementById('machineCards'),
       machineEmpty: document.getElementById('machineEmpty'),
+      runoutRail: document.getElementById('runoutRail'),
+      runoutSummary: document.getElementById('runoutSummary'),
+      runoutEmpty: document.getElementById('runoutEmpty'),
       actionFeed: document.getElementById('actionFeed'),
       tickerText: document.getElementById('tickerText'),
       clock: document.getElementById('clock'),
@@ -943,6 +1062,65 @@
       });
     }
 
+
+    function buildRunoutQueue(items) {
+      return [...items]
+        .filter(i => clean(i.machine))
+        .sort((a, b) => {
+          const aDays = toNumber(a.daysLeft);
+          const bDays = toNumber(b.daysLeft);
+          const aValid = Number.isFinite(aDays) && aDays > 0;
+          const bValid = Number.isFinite(bDays) && bDays > 0;
+          if (aValid && bValid) return aDays - bDays;
+          if (aValid) return -1;
+          if (bValid) return 1;
+          return (toNumber(a.orderQty) * -1) - (toNumber(b.orderQty) * -1);
+        });
+    }
+
+    function renderRunoutQueue(items) {
+      els.runoutRail.innerHTML = '';
+      if (!items.length) {
+        els.runoutEmpty.style.display = 'block';
+        els.runoutSummary.textContent = 'No queue data loaded';
+        return;
+      }
+      els.runoutEmpty.style.display = 'none';
+      els.runoutSummary.textContent = `${items.length} item${items.length === 1 ? '' : 's'} in priority order`;
+
+      items.slice(0, 6).forEach((item, index) => {
+        const div = document.createElement('div');
+        const stateClass = item.status === 'CRITICAL' ? 'critical' : (item.status === 'ORDER' ? 'order' : 'ok');
+        const days = clean(item.daysLeft) || '—';
+        div.className = `queue-item ${stateClass}`;
+        div.innerHTML = `
+          <div class="queue-top">
+            <div class="queue-rank">${index + 1}</div>
+            <div class="queue-main">
+              <div class="queue-machine">${esc(item.machine)}</div>
+              <div class="queue-item-name">${esc(item.item || 'Inventory item')}</div>
+            </div>
+            <span class="${getStatusClass(item.status)}">${esc(item.status)}</span>
+          </div>
+          <div class="queue-metrics">
+            <div class="queue-chip">
+              <div class="queue-chip-label">Days Left</div>
+              <div class="queue-chip-value ${dayClass(days)}">${esc(days)}</div>
+            </div>
+            <div class="queue-chip">
+              <div class="queue-chip-label">Runout Date</div>
+              <div class="queue-chip-value">${esc(formatDate(item.runoutDate))}</div>
+            </div>
+            <div class="queue-chip">
+              <div class="queue-chip-label">Order Qty</div>
+              <div class="queue-chip-value">${Math.round(toNumber(item.orderQty))}</div>
+            </div>
+          </div>
+        `;
+        els.runoutRail.appendChild(div);
+      });
+    }
+
     function renderMachineCards(items) {
       els.machineCards.innerHTML = '';
       if (!items.length) {
@@ -1057,10 +1235,12 @@
 
         const { sections } = extractSections(rows);
         const priorityItems = buildPriorityList(sections);
+        const runoutQueue = buildRunoutQueue(priorityItems);
 
         renderPriority(priorityItems);
-        renderMachineCards(priorityItems);
-        renderFeed(priorityItems, sections.metrics);
+        renderRunoutQueue(runoutQueue);
+        renderMachineCards(runoutQueue);
+        renderFeed(runoutQueue, sections.metrics);
         updateHeader(sections.metrics, priorityItems);
 
         els.lastUpdated.textContent = `Last sync: ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
