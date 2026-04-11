@@ -34,7 +34,7 @@
         radial-gradient(1200px 700px at 15% -10%, rgba(62,126,255,.18), transparent 60%),
         radial-gradient(1000px 700px at 100% 0%, rgba(63,229,255,.13), transparent 55%),
         linear-gradient(135deg, var(--bg-1), var(--bg-2));
-      overflow:hidden;
+      overflow:auto;
     }
 
     .grid-overlay{
@@ -49,7 +49,7 @@
     .shell{
       min-height:100%;
       display:grid;
-      grid-template-rows:88px 1fr;
+      grid-template-rows:auto 1fr;
       padding:18px;
       gap:16px;
     }
@@ -196,12 +196,6 @@
     .empty{
       display:grid;place-items:center;min-height:180px;color:var(--muted);border:1px dashed rgba(255,255,255,.12);border-radius:18px;background:rgba(255,255,255,.03);text-align:center;padding:18px;
     }
-
-    .fifo-scroll{
-      max-height:calc(100vh - 320px);
-      overflow:auto;
-      padding-right:4px;
-    }
     .fifo-grid{display:grid;gap:14px}
     .fifo-row{
       display:grid;
@@ -242,11 +236,10 @@
 
     .perf-layout{
       display:grid;
-      gap:12px;
-      height:calc(100vh - 160px);
-      overflow:hidden;
+      gap:10px;
+      min-height:0;
     }
-    .rank-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+    .rank-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
     .rank-card,.summary-card,.op-card,.labor-card,.chart-card{
       border:1px solid rgba(255,255,255,.08);border-radius:20px;background:var(--glass-2);padding:12px;
     }
@@ -267,12 +260,12 @@
     .rank-value.green{color:#8ff0ae}
     .rank-value.yellow{color:#ffe07a}
 
-    .summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+    .summary-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
     .summary-card .value{font-size:28px;font-weight:900;margin:6px 0 3px}
     .summary-card .label{font-size:10px;color:var(--muted);letter-spacing:.13em;text-transform:uppercase}
     .summary-card .sub{font-size:12px;color:var(--muted)}
 
-    .ops-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:12px}
+    .ops-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:10px}
     .op-stack{display:grid;gap:12px}
     .metric-list{display:grid;gap:7px}
     .metric-row{
@@ -281,14 +274,14 @@
     .metric-row .k{color:var(--muted);font-size:11px;letter-spacing:.08em;text-transform:uppercase}
     .metric-row .v{font-weight:900;font-size:13px}
     .split-dual{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .labor-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+    .labor-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
     .labor-card h5{margin:0 0 10px;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
     .labor-card .metric-list{gap:6px}
     .chart-card canvas{width:100%;max-width:240px;margin:0 auto;display:block}
     .chart-caption{margin-top:8px;font-size:11px;color:var(--muted);text-align:center;line-height:1.3}
 
     .perf-table-wrap{
-      max-height:200px;
+      max-height:120px;
       overflow:auto;
     }
 
@@ -422,17 +415,7 @@
           </div>
 
           <div class="right-col">
-            <div class="panel">
-              <div class="panel-head">
-                <div>
-                  <h3 class="panel-title">Runout Feed</h3>
-                  <div class="panel-sub">What needs attention first</div>
-                </div>
-              </div>
-              <div class="panel-body">
-                <div id="actionFeed" class="feed"></div>
-              </div>
-            </div>
+            
 
             <div class="panel">
               <div class="panel-head">
@@ -453,10 +436,11 @@
       <section id="page-performance" class="page">
         <div class="perf-layout">
           <div class="summary-grid" id="performanceMetrics">
-            <div class="summary-card"><div class="label">Live Rows</div><div class="value">--</div><div class="sub">Waiting for feed</div></div>
-            <div class="summary-card"><div class="label">Overall Crane Payout</div><div class="value">--</div><div class="sub">Auto-detected</div></div>
-            <div class="summary-card"><div class="label">Overall Merch Payout</div><div class="value">--</div><div class="sub">Auto-detected</div></div>
-            <div class="summary-card"><div class="label">Average Labor</div><div class="value">--</div><div class="sub">Auto-detected</div></div>
+            <div class="summary-card"><div class="label">Top Revenue % 1</div><div class="value">--</div><div class="sub">Waiting for feed</div></div>
+            <div class="summary-card"><div class="label">Top Revenue % 2</div><div class="value">--</div><div class="sub">Waiting for feed</div></div>
+            <div class="summary-card"><div class="label">Game Total Cost</div><div class="value">--</div><div class="sub">Waiting for feed</div></div>
+            <div class="summary-card"><div class="label">Overall Crane Payout</div><div class="value">--</div><div class="sub">Waiting for feed</div></div>
+            <div class="summary-card"><div class="label">Overall Merch Payout</div><div class="value">--</div><div class="sub">Waiting for feed</div></div>
           </div>
 
           <div class="rank-grid" id="top5Grid">
@@ -490,11 +474,11 @@
 
             <div class="chart-card">
               <div class="section-head">
-                <h4>Revenue Mix</h4>
-                <span>Based on lower revenue &amp; labor section</span>
+                <h4>Highest Sales Leaderboard</h4>
+                <span>Highest to lowest by sales</span>
               </div>
-              <canvas id="revenuePie" width="240" height="240"></canvas>
-              <div class="chart-caption" id="pieCaption">Waiting for revenue categories…</div>
+              <canvas id="salesBarChart" width="240" height="240"></canvas>
+              <div class="chart-caption" id="pieCaption">Waiting for sales categories…</div>
             </div>
           </div>
 
@@ -527,10 +511,7 @@
     </div>
   </div>
 
-  <div class="ticker">
-    <div class="ticker-label">Ops Ticker</div>
-    <div class="ticker-track" id="tickerTrack">Loading live control room feeds…</div>
-  </div>
+  
 
   <script>
     const CONFIG = {
@@ -845,7 +826,7 @@
         return;
       }
 
-      root.innerHTML = `<div class="fifo-scroll"><div class="fifo-grid">
+      root.innerHTML = `<div class="fifo-grid">
         ${view.rows.map(row => {
           const slots = [row.current || "", ...(row.nexts || [])].slice(0,4);
           while(slots.length < 4) slots.push("");
@@ -872,10 +853,11 @@
             </div>
           </div>`;
         }).join("")}
-      </div></div>`;
+      </div>`;
     }
 
     
+
     function findValueNear(rows, label){
       const lower = label.toLowerCase();
       const normalized = normalizeRows(rows);
@@ -900,50 +882,70 @@
       return null;
     }
 
-    function readVerticalPairBlock(rows, startLabel, width = 3, count = 5){
-      const pos = findCellContains(rows, startLabel);
+    function readBlockByHeader(rows, sectionLabel, wantedHeader){
+      const pos = findCellContains(rows, sectionLabel);
       if(!pos) return [];
       const normalized = normalizeRows(rows);
-
-      let gameCol = pos.col;
-      let valueCol = pos.col + 1;
-
-      for(let r = pos.row; r < Math.min(normalized.length, pos.row + 3); r++){
-        for(let c = pos.col; c < Math.min(normalized[r].length, pos.col + width + 2); c++){
-          const t = String(normalized[r][c] || "").trim().toLowerCase();
-          if(t === "game") gameCol = c;
-          if(t === "amount" || t === "percentage") valueCol = c;
-        }
-      }
-
-      const out = [];
-      let startRow = pos.row + 1;
+      let headerRow = -1;
       for(let r = pos.row; r < Math.min(normalized.length, pos.row + 4); r++){
-        const hasGame = String(normalized[r][gameCol] || "").trim().toLowerCase() === "game";
-        const hasVal = ["amount","percentage"].includes(String(normalized[r][valueCol] || "").trim().toLowerCase());
-        if(hasGame || hasVal){
-          startRow = r + 1;
+        const joined = normalized[r].join(" ").toLowerCase();
+        if(joined.includes("game") && joined.includes(wantedHeader.toLowerCase())){
+          headerRow = r;
           break;
         }
       }
+      if(headerRow === -1) return [];
 
-      for(let r = startRow; r < Math.min(normalized.length, startRow + count + 2); r++){
+      let gameCol = -1;
+      let valueCol = -1;
+      for(let c = 0; c < normalized[headerRow].length; c++){
+        const text = String(normalized[headerRow][c] || "").trim().toLowerCase();
+        if(text === "game" && gameCol === -1) gameCol = c;
+        if(text === wantedHeader.toLowerCase() && valueCol === -1) valueCol = c;
+      }
+      if(gameCol === -1 || valueCol === -1) return [];
+
+      const items = [];
+      for(let r = headerRow + 1; r < Math.min(normalized.length, headerRow + 7); r++){
         const name = String(normalized[r][gameCol] || "").trim();
         const value = String(normalized[r][valueCol] || "").trim();
         if(!name && !value) break;
-        out.push({ name, value });
+        if(name) items.push({ name, value });
       }
-      return out.slice(0, count);
+      return items.slice(0, 5);
     }
 
-    function valueUnderLabel(rows, label){
+    function readMiniPercentBlock(rows){
+      const normalized = normalizeRows(rows);
+      let headerRow = -1, gameCol = -1, pctCol = -1;
+      for(let r = 0; r < normalized.length; r++){
+        for(let c = 0; c < normalized[r].length - 1; c++){
+          const a = String(normalized[r][c] || "").trim().toLowerCase();
+          const b = String(normalized[r][c + 1] || "").trim().toLowerCase();
+          if(a === "game" && b === "percentage"){
+            headerRow = r; gameCol = c; pctCol = c + 1;
+          }
+        }
+      }
+      if(headerRow === -1) return [];
+      const out = [];
+      for(let r = headerRow + 1; r < Math.min(normalized.length, headerRow + 4); r++){
+        const name = String(normalized[r][gameCol] || "").trim();
+        const value = String(normalized[r][pctCol] || "").trim();
+        if(!name && !value) break;
+        if(name) out.push({ name, value });
+      }
+      return out;
+    }
+
+    function valueBelowLabel(rows, label){
       const pos = findCellContains(rows, label);
       if(!pos) return null;
       const normalized = normalizeRows(rows);
 
-      for(let r = pos.row + 1; r < Math.min(normalized.length, pos.row + 4); r++){
-        for(let c = Math.max(0, pos.col - 1); c <= pos.col + 2; c++){
-          const text = String(normalized[r]?.[c] || "").trim();
+      for(let r = pos.row + 1; r < Math.min(normalized.length, pos.row + 3); r++){
+        for(let c = pos.col; c < Math.min(normalized[r].length, pos.col + 2); c++){
+          const text = String(normalized[r][c] || "").trim();
           if(text) return text;
         }
       }
@@ -971,15 +973,16 @@
     }
 
     function parsePerformance(rows){
-      const topRevenue = readVerticalPairBlock(rows, "Revenue", 4, 5);
-      const redemptionPayout = readVerticalPairBlock(rows, "Redemption Payout", 4, 5);
-      const craneCost = readVerticalPairBlock(rows, "Crane Cost", 4, 5);
+      const topRevenue = readBlockByHeader(rows, "Revenue", "Amount");
+      const redemptionPayout = readBlockByHeader(rows, "Redemption Payout", "Amount");
+      const craneCost = readBlockByHeader(rows, "Crane Cost", "Percentage");
+      const miniPercent = readMiniPercentBlock(rows);
 
       const summary = {
-        gameTotalCost: valueUnderLabel(rows, "Game Total Cost"),
-        overallCranePayout: valueUnderLabel(rows, "Overall Crane Payout"),
-        overallMerchPayout: valueUnderLabel(rows, "Overall Merch Payout"),
-        averageLabor: valueUnderLabel(rows, "Average Labor Overall")
+        gameTotalCost: valueBelowLabel(rows, "Game Total Cost"),
+        overallCranePayout: valueBelowLabel(rows, "Overall Crane Payout"),
+        overallMerchPayout: valueBelowLabel(rows, "Overall Merch Payout"),
+        averageLabor: valueBelowLabel(rows, "Average Labor Overall")
       };
 
       const bowling = readAreaMetrics(rows, "Bowling", ["Revenue", "Labor %", "Labor $", "Pin Sales"]);
@@ -989,10 +992,20 @@
 
       const laborSections = ["XD","Redemption","Ropes","Escape Rooms"].map(name => readColumnSection(rows, name)).filter(Boolean);
 
-      const revenuePie = laborSections.map(section => ({
-        name: section.title,
-        value: safeNumber(section.metrics.find(m => m.key.toLowerCase() === "sales")?.value)
-      })).filter(x => x.value !== null);
+      const salesBoard = [
+        { name:"Bowling", value:safeNumber(findValueNear(rows, "Bowling")) },
+        ...laborSections.map(section => ({
+          name: section.title,
+          value: safeNumber(section.metrics.find(m => m.key.toLowerCase() === "sales")?.value)
+        })),
+        { name:"Laser Tag", value:safeNumber(findValueNear(rows.slice((findCellContains(rows,"Laser Tag")||{row:0}).row), "Sales")) },
+        { name:"Gel Blaster", value:safeNumber(findValueNear(rows.slice((findCellContains(rows,"Gel Blaster")||{row:0}).row), "Sales")) }
+      ].filter(item => item.value !== null)
+       .reduce((acc, item) => {
+          if(!acc.find(x => x.name === item.name)) acc.push(item);
+          return acc;
+       }, [])
+       .sort((a,b) => b.value - a.value);
 
       const generic = parseGenericDataset(rows);
 
@@ -1000,18 +1013,19 @@
         topRevenue,
         redemptionPayout,
         craneCost,
+        miniPercent,
         summary,
         bowling,
         repair,
         laserTag,
         gelBlaster,
         laborSections,
-        revenuePie,
+        salesBoard,
         generic
       };
     }
 
-function renderMetricList(targetId, items){
+    function renderMetricList(targetId, items){
       const root = document.getElementById(targetId);
       if(!items.length){
         root.innerHTML = `<div class="empty">No metrics found.</div>`;
@@ -1038,11 +1052,14 @@ function renderMetricList(targetId, items){
     }
 
     function renderPerformance(view){
+      const percent1 = view.miniPercent[0] || { name:"Top Revenue % 1", value:"--" };
+      const percent2 = view.miniPercent[1] || { name:"Top Revenue % 2", value:"--" };
       const metrics = [
-        { label:"Live Rows", value:view.generic.records.length || "--", sub:"Performance rows visible" },
+        { label: percent1.name, value: percent1.value, sub:"Revenue percentage card" },
+        { label: percent2.name, value: percent2.value, sub:"Revenue percentage card" },
+        { label:"Game Total Cost", value:view.summary.gameTotalCost || "--", sub:"Executive sheet KPI" },
         { label:"Overall Crane Payout", value:view.summary.overallCranePayout || "--", sub:"Executive sheet KPI" },
-        { label:"Overall Merch Payout", value:view.summary.overallMerchPayout || "--", sub:"Executive sheet KPI" },
-        { label:"Average Labor Overall", value:view.summary.averageLabor || "--", sub:"Executive sheet KPI" }
+        { label:"Overall Merch Payout", value:view.summary.overallMerchPayout || "--", sub:"Executive sheet KPI" }
       ];
       document.getElementById("performanceMetrics").innerHTML = metrics.map(m => `
         <div class="summary-card">
@@ -1058,7 +1075,7 @@ function renderMetricList(targetId, items){
         renderRankCard("Crane Cost", "Highest crane cost percentages", view.craneCost, "red")
       ].join("");
 
-      renderMetricList("bowlingMetrics", view.bowling);
+      renderMetricList("bowlingMetrics", [...view.bowling, { key:"Average Labor Overall", value:view.summary.averageLabor || "—" }]);
       renderMetricList("repairMetrics", view.repair);
       renderMetricList("laserMetrics", view.laserTag);
       renderMetricList("gelMetrics", view.gelBlaster);
@@ -1079,72 +1096,54 @@ function renderMetricList(targetId, items){
         `).join("");
       }
 
-      drawRevenuePie(view.revenuePie);
+      drawSalesBarChart(view.salesBoard);
       document.getElementById("performanceBoardSub").textContent =
         view.summary.gameTotalCost ? `Game Total Cost ${view.summary.gameTotalCost} • compact executive board view` : "Compact executive board view";
 
-      document.getElementById("performanceTableWrap").innerHTML = renderGenericTable(view.generic.headers, view.generic.records, 30);
+      document.getElementById("performanceTableWrap").innerHTML = renderGenericTable(view.generic.headers, view.generic.records, 26);
     }
 
-    function drawRevenuePie(items){
-      const canvas = document.getElementById("revenuePie");
+    function drawSalesBarChart(items){
+      const canvas = document.getElementById("salesBarChart");
       const caption = document.getElementById("pieCaption");
       const ctx = canvas.getContext("2d");
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       if(!items.length){
-        caption.textContent = "Revenue categories were not found in the lower section.";
+        caption.textContent = "Sales categories were not found in the sheet.";
         ctx.fillStyle = "rgba(255,255,255,.14)";
-        ctx.beginPath();
-        ctx.arc(120, 120, 80, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.fillRect(20, 20, 200, 160);
         return;
       }
 
-      const total = items.reduce((sum, item) => sum + item.value, 0);
-      const colors = ["#5e9bff","#f3b300","#2fd39c","#ff6b8c","#a88dff","#ffb561"];
-      let start = -Math.PI / 2;
-      items.forEach((item, idx) => {
-        const slice = (item.value / total) * Math.PI * 2;
-        ctx.beginPath();
-        ctx.moveTo(120, 120);
-        ctx.arc(120, 120, 80, start, start + slice);
-        ctx.closePath();
+      const data = items.slice(0, 6);
+      const maxVal = Math.max(...data.map(d => d.value));
+      const left = 70, top = 18, width = 145, rowH = 34, barH = 16;
+      const colors = ["#f3b300","#5e9bff","#2fd39c","#ff6b8c","#a88dff","#ffb561"];
+
+      ctx.font = "600 11px Inter, sans-serif";
+      ctx.textBaseline = "middle";
+
+      data.forEach((item, idx) => {
+        const y = top + idx * rowH;
+        const w = (item.value / maxVal) * width;
+
+        ctx.fillStyle = "#9fb2cf";
+        ctx.textAlign = "right";
+        ctx.fillText(item.name, left - 8, y + barH / 2);
+
+        ctx.fillStyle = "rgba(255,255,255,.08)";
+        ctx.fillRect(left, y, width, barH);
+
         ctx.fillStyle = colors[idx % colors.length];
-        ctx.fill();
-        start += slice;
+        ctx.fillRect(left, y, w, barH);
+
+        ctx.fillStyle = "#eaf2ff";
+        ctx.textAlign = "left";
+        ctx.fillText(`$${Math.round(item.value).toLocaleString()}`, left + Math.min(w + 6, width - 5), y + barH / 2);
       });
 
-      ctx.beginPath();
-      ctx.arc(120, 120, 40, 0, Math.PI * 2);
-      ctx.fillStyle = "#0b1d35";
-      ctx.fill();
-
-      ctx.fillStyle = "#eaf2ff";
-      ctx.font = "700 14px Inter, sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText(`$${Math.round(total).toLocaleString()}`, 120, 126);
-
-      caption.textContent = items.map(item => `${item.name} ${Math.round((item.value / total) * 100)}%`).join(" • ");
-    }
-
-    function buildTicker(inventoryRows, fifoView, perfView){
-      const parts = [];
-      if(inventoryRows?.length){
-        parts.push(inventoryRows.slice(0, 5).map(row => {
-          const days = row.daysLeft ?? "--";
-          const status = row.status || "OK";
-          return `${row.machine || "Machine"} / ${row.item || "Item"} — ${status} — ${days} days left${row.orderQty ? ` — order ${row.orderQty}` : ""}`;
-        }).join("   ✦   "));
-      }
-      if(fifoView?.rows?.length){
-        const fifoLine = fifoView.rows.slice(0, 3).map(r => `${r.machine} current ${r.current || "—"}`).join("   ✦   ");
-        parts.push(`Crane FIFO — ${fifoLine}`);
-      }
-      if(perfView?.summary){
-        parts.push(`Games Performance — Crane Payout ${perfView.summary.overallCranePayout || "--"} • Merch Payout ${perfView.summary.overallMerchPayout || "--"} • Avg Labor ${perfView.summary.averageLabor || "--"}`);
-      }
-      return parts.filter(Boolean).join("   ✦   ") || "No urgent runout items detected in the live sheets right now.";
+      caption.textContent = data.map((item, idx) => `${idx + 1}. ${item.name}`).join(" • ");
     }
 
     function updateHeader(summary, priorityRows){
@@ -1200,7 +1199,6 @@ function renderMetricList(targetId, items){
         const perfView = parsePerformance(performanceRows);
         renderPerformance(perfView);
 
-        document.getElementById("tickerTrack").textContent = buildTicker(priorityRows, fifoView, perfView);
         setSyncState("Live");
       } catch (err){
         console.error(err);
