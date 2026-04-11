@@ -17,9 +17,11 @@
       --yellow:#ffd54d;
       --red:#ff5c7c;
       --violet:#9f8cff;
+      --orange:#ffb561;
       --shadow:0 18px 50px rgba(0,0,0,.35);
       --radius:22px;
       --glass:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
+      --glass-2:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.025));
     }
 
     *{box-sizing:border-box}
@@ -65,104 +67,44 @@
       box-shadow:var(--shadow);
     }
 
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:14px;
-      min-width:0;
-    }
-
+    .brand{display:flex;align-items:center;gap:14px;min-width:0}
     .brand-mark{
       width:44px;height:44px;border-radius:14px;
       background:
         radial-gradient(circle at 30% 30%, rgba(255,255,255,.28), transparent 45%),
         linear-gradient(135deg, rgba(98,183,255,.9), rgba(86,239,255,.55));
       box-shadow:inset 0 1px 0 rgba(255,255,255,.35), 0 0 24px rgba(89,197,255,.35);
-      position:relative;
-      flex:0 0 auto;
+      position:relative;flex:0 0 auto;
     }
     .brand-mark:after{
-      content:"";
-      position:absolute; inset:10px;
-      border:1px solid rgba(255,255,255,.42);
-      border-radius:10px;
+      content:"";position:absolute;inset:10px;border:1px solid rgba(255,255,255,.42);border-radius:10px;
     }
-
     .brand h1{
-      margin:0;
-      font-size:26px;
-      line-height:1;
-      letter-spacing:.04em;
-      font-weight:800;
-      text-transform:uppercase;
+      margin:0;font-size:26px;line-height:1;letter-spacing:.04em;font-weight:800;text-transform:uppercase;
     }
     .brand p{
-      margin:4px 0 0;
-      color:var(--muted);
-      font-size:12px;
-      letter-spacing:.18em;
-      text-transform:uppercase;
+      margin:4px 0 0;color:var(--muted);font-size:12px;letter-spacing:.18em;text-transform:uppercase;
     }
 
-    .top-actions{
-      display:flex;
-      align-items:center;
-      gap:14px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-
+    .top-actions{display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end}
     .tab-switch{
-      display:flex;
-      gap:8px;
-      padding:6px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(255,255,255,.05);
-      backdrop-filter:blur(14px);
+      display:flex;gap:8px;padding:6px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.05);backdrop-filter:blur(14px);
     }
-
     .tab-btn{
-      border:0;
-      color:var(--muted);
-      background:transparent;
-      border-radius:999px;
-      padding:10px 16px;
-      font-size:12px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      font-weight:800;
-      cursor:pointer;
-      transition:.2s ease;
+      border:0;color:var(--muted);background:transparent;border-radius:999px;padding:10px 16px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;font-weight:800;cursor:pointer;transition:.2s ease;
     }
     .tab-btn:hover{ color:var(--text); }
     .tab-btn.active{
-      color:#041321;
-      background:linear-gradient(135deg, rgba(106,184,255,.98), rgba(97,231,255,.95));
-      box-shadow:0 8px 20px rgba(97,231,255,.22);
+      color:#041321;background:linear-gradient(135deg, rgba(106,184,255,.98), rgba(97,231,255,.95));box-shadow:0 8px 20px rgba(97,231,255,.22);
     }
 
-    .status-strip{
-      display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; align-items:center;
-    }
-
+    .status-strip{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;align-items:center}
     .pill{
-      border:1px solid var(--line);
-      border-radius:999px;
-      padding:10px 14px;
-      background:rgba(255,255,255,.04);
-      color:var(--muted);
-      font-size:12px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      white-space:nowrap;
+      border:1px solid var(--line);border-radius:999px;padding:10px 14px;background:rgba(255,255,255,.04);color:var(--muted);font-size:12px;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;
     }
-    .pill strong{color:var(--text); font-weight:700}
+    .pill strong{color:var(--text);font-weight:700}
     .pulse-dot{
-      display:inline-block; width:9px; height:9px; border-radius:50%;
-      background:var(--green); margin-right:8px;
-      animation:pulse 1.8s infinite;
-      vertical-align:middle;
+      display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--green);margin-right:8px;animation:pulse 1.8s infinite;vertical-align:middle;
     }
     @keyframes pulse{
       0%{box-shadow:0 0 0 0 rgba(64,217,138,.6)}
@@ -170,333 +112,200 @@
       100%{box-shadow:0 0 0 0 rgba(64,217,138,0)}
     }
 
-    .pages{ min-height:0; position:relative; }
-    .page{ min-height:0; height:100%; display:none; }
-    .page.active{ display:block; }
+    .pages{min-height:0;position:relative}
+    .page{min-height:0;height:100%;display:none}
+    .page.active{display:block}
 
     .content{
       min-height:0;
       display:grid;
-      grid-template-columns:1.3fr .95fr;
+      grid-template-columns:1.25fr .95fr;
       gap:16px;
     }
+    .left-col,.right-col{min-height:0;display:grid;gap:16px}
+    .left-col{grid-template-rows:auto auto 1fr}
+    .right-col{grid-template-rows:auto 1fr}
 
-    .left-col,.right-col{
-      min-height:0;
-      display:grid;
-      gap:16px;
-    }
-
-    .left-col{ grid-template-rows:auto auto 1fr; }
-    .right-col{ grid-template-rows:auto 1fr; }
-
-    .cards{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:16px;
-    }
-
+    .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
     .card,.panel{
-      border:1px solid var(--line);
-      background:var(--glass);
-      backdrop-filter:blur(16px);
-      box-shadow:var(--shadow);
-      border-radius:var(--radius);
-      overflow:hidden;
-      min-height:0;
+      border:1px solid var(--line);background:var(--glass);backdrop-filter:blur(16px);box-shadow:var(--shadow);border-radius:var(--radius);overflow:hidden;min-height:0;
     }
-
-    .metric{
-      padding:18px 18px 16px;
-      position:relative;
-      min-height:112px;
-    }
-    .metric .label{
-      color:var(--muted);
-      font-size:12px;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      margin-bottom:8px;
-    }
-    .metric .value{
-      font-size:42px;
-      line-height:1;
-      font-weight:800;
-      letter-spacing:-.03em;
-    }
-    .metric .sub{
-      margin-top:8px;
-      color:var(--muted);
-      font-size:13px;
-    }
-    .metric.blue:before,.metric.red:before,.metric.yellow:before,.metric.green:before,.metric.violet:before{
-      content:"";
-      position:absolute; inset:auto -30px -30px auto;
-      width:130px; height:130px; border-radius:50%;
-      filter:blur(16px); opacity:.22;
+    .metric{padding:18px 18px 16px;position:relative;min-height:112px}
+    .metric .label{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
+    .metric .value{font-size:42px;line-height:1;font-weight:800;letter-spacing:-.03em}
+    .metric .sub{margin-top:8px;color:var(--muted);font-size:13px}
+    .metric.blue:before,.metric.red:before,.metric.yellow:before,.metric.green:before,.metric.violet:before,.metric.orange:before{
+      content:"";position:absolute;inset:auto -30px -30px auto;width:130px;height:130px;border-radius:50%;filter:blur(16px);opacity:.22;
     }
     .metric.blue:before{ background:var(--blue); }
     .metric.red:before{ background:var(--red); }
     .metric.yellow:before{ background:var(--yellow); }
     .metric.green:before{ background:var(--green); }
     .metric.violet:before{ background:var(--violet); }
+    .metric.orange:before{ background:var(--orange); }
 
     .panel-head{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:16px 18px 12px;
-      border-bottom:1px solid rgba(255,255,255,.08);
+      display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px 12px;border-bottom:1px solid rgba(255,255,255,.08);
     }
-    .panel-title{
-      margin:0;
-      font-size:15px;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-    }
-    .panel-sub{
-      color:var(--muted);
-      font-size:12px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-    .panel-body{
-      padding:14px 16px 16px;
-      min-height:0;
-      overflow:auto;
+    .panel-title{margin:0;font-size:15px;letter-spacing:.10em;text-transform:uppercase}
+    .panel-sub{color:var(--muted);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+    .panel-body{padding:14px 16px 16px;min-height:0;overflow:auto}
+    .small{font-size:12px;color:var(--muted)}
+    .kicker{
+      display:inline-block;padding:7px 10px;border-radius:999px;background:rgba(97,231,255,.08);border:1px solid rgba(97,231,255,.16);color:var(--cyan);font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
     }
 
-    .split{ display:grid; gap:16px; min-height:0; }
-    .split-2{ grid-template-columns:1fr 1fr; }
-
-    table{
-      width:100%;
-      border-collapse:collapse;
-      font-size:14px;
-    }
+    table{width:100%;border-collapse:collapse;font-size:14px}
     thead th{
-      position:sticky; top:0; z-index:1;
-      background:rgba(9,19,33,.95);
-      color:var(--muted);
-      text-align:left;
-      padding:12px 10px;
-      font-size:11px;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      border-bottom:1px solid rgba(255,255,255,.1);
+      position:sticky;top:0;z-index:1;background:rgba(9,19,33,.95);color:var(--muted);text-align:left;padding:12px 10px;font-size:11px;text-transform:uppercase;letter-spacing:.12em;border-bottom:1px solid rgba(255,255,255,.1);
     }
-    tbody td{
-      padding:12px 10px;
-      border-bottom:1px solid rgba(255,255,255,.06);
-      vertical-align:middle;
-    }
-    tbody tr:hover{ background:rgba(255,255,255,.03); }
+    tbody td{padding:12px 10px;border-bottom:1px solid rgba(255,255,255,.06);vertical-align:middle}
+    tbody tr:hover{background:rgba(255,255,255,.03)}
 
     .badge{
-      display:inline-flex; align-items:center; justify-content:center;
-      min-width:84px;
-      padding:7px 10px;
-      border-radius:999px;
-      font-size:11px;
-      font-weight:800;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      border:1px solid transparent;
+      display:inline-flex;align-items:center;justify-content:center;min-width:84px;padding:7px 10px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.10em;text-transform:uppercase;border:1px solid transparent;
     }
     .status-ok{ color:#0f2f1f; background:rgba(64,217,138,.92); }
     .status-order{ color:#392b00; background:rgba(255,213,77,.95); }
     .status-critical{ color:#3d0012; background:rgba(255,92,124,.95); }
     .status-neutral{ color:#eaf2ff; background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.08); }
 
-    .queue{ display:grid; gap:12px; }
-
+    .queue{display:grid;gap:12px}
     .queue-item{
-      display:grid;
-      grid-template-columns:70px 1fr auto;
-      gap:14px;
-      align-items:center;
-      padding:14px;
-      border-radius:18px;
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.08);
+      display:grid;grid-template-columns:70px 1fr auto;gap:14px;align-items:center;padding:14px;border-radius:18px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);
     }
     .queue-rank{
-      width:56px; height:56px; border-radius:16px;
-      display:flex; align-items:center; justify-content:center;
-      font-size:24px; font-weight:900;
-      background:linear-gradient(135deg, rgba(106,184,255,.35), rgba(97,231,255,.18));
-      border:1px solid rgba(255,255,255,.12);
-      color:white;
+      width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;background:linear-gradient(135deg, rgba(106,184,255,.35), rgba(97,231,255,.18));border:1px solid rgba(255,255,255,.12);color:white;
     }
-    .queue-main{ min-width:0; }
+    .queue-main{min-width:0}
     .queue-title{
-      font-size:18px;
-      font-weight:800;
-      letter-spacing:.01em;
-      margin-bottom:4px;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      font-size:18px;font-weight:800;letter-spacing:.01em;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     }
-    .queue-meta{
-      display:flex; flex-wrap:wrap; gap:8px 12px;
-      color:var(--muted);
-      font-size:13px;
-    }
-    .queue-right{
-      text-align:right;
-      min-width:160px;
-    }
-    .days{
-      font-size:34px;
-      line-height:1;
-      font-weight:900;
-      letter-spacing:-.03em;
-    }
-    .days.red{ color:var(--red); }
-    .days.yellow{ color:var(--yellow); }
-    .days.green{ color:var(--green); }
-    .mini{
-      color:var(--muted);
-      font-size:12px;
-      text-transform:uppercase;
-      letter-spacing:.10em;
-      margin-top:6px;
-    }
+    .queue-meta{display:flex;flex-wrap:wrap;gap:8px 12px;color:var(--muted);font-size:13px}
+    .queue-right{text-align:right;min-width:160px}
+    .days{font-size:34px;line-height:1;font-weight:900;letter-spacing:-.03em}
+    .days.red{color:var(--red)} .days.yellow{color:var(--yellow)} .days.green{color:var(--green)}
+    .mini{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.10em;margin-top:6px}
 
-    .feed{ display:grid; gap:10px; }
-    .feed-row{
-      display:flex; gap:12px; align-items:flex-start;
-      padding:12px 0;
-      border-bottom:1px solid rgba(255,255,255,.06);
-    }
-    .feed-dot{
-      width:10px; height:10px; border-radius:50%; margin-top:5px;
-      background:var(--blue);
-      flex:0 0 auto;
-    }
-    .feed-copy strong{ display:block; font-size:14px; margin-bottom:3px; }
-    .feed-copy span{ color:var(--muted); font-size:13px; }
-
-    .list-cards{ display:grid; gap:12px; }
-    .list-card{
-      padding:15px 16px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.08);
-      background:rgba(255,255,255,.05);
-    }
-    .list-top{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:8px;
-    }
-    .list-name{
-      font-weight:800;
-      font-size:16px;
-      min-width:0;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-    .list-kpi{
-      font-size:24px;
-      font-weight:900;
-      color:var(--cyan);
-      white-space:nowrap;
-    }
-    .list-meta{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px 12px;
-      color:var(--muted);
-      font-size:13px;
-    }
+    .feed{display:grid;gap:10px}
+    .feed-row{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+    .feed-dot{width:10px;height:10px;border-radius:50%;margin-top:5px;background:var(--blue);flex:0 0 auto}
+    .feed-copy strong{display:block;font-size:14px;margin-bottom:3px}
+    .feed-copy span{color:var(--muted);font-size:13px}
 
     .empty{
-      display:grid; place-items:center;
-      min-height:180px;
-      color:var(--muted);
-      border:1px dashed rgba(255,255,255,.12);
-      border-radius:18px;
-      background:rgba(255,255,255,.03);
-      text-align:center;
-      padding:18px;
+      display:grid;place-items:center;min-height:180px;color:var(--muted);border:1px dashed rgba(255,255,255,.12);border-radius:18px;background:rgba(255,255,255,.03);text-align:center;padding:18px;
     }
 
-    .kicker{
-      display:inline-block;
-      padding:7px 10px;
-      border-radius:999px;
-      background:rgba(97,231,255,.08);
-      border:1px solid rgba(97,231,255,.16);
-      color:var(--cyan);
-      font-size:11px;
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
+    .fifo-grid{display:grid;gap:14px}
+    .fifo-row{
+      display:grid;
+      grid-template-columns:220px 1.15fr 1fr 1fr 1fr;
+      gap:12px;
+      padding:14px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:20px;
+      background:var(--glass-2);
     }
+    .fifo-machine{
+      display:flex;flex-direction:column;justify-content:center;padding:16px;border-radius:18px;
+      background:linear-gradient(135deg, rgba(120,155,220,.30), rgba(255,255,255,.04));
+      border:1px solid rgba(255,255,255,.08);
+      min-height:124px;
+    }
+    .fifo-machine .tag{
+      color:var(--muted);font-size:11px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px
+    }
+    .fifo-machine .name{font-size:24px;font-weight:900;font-style:italic}
+    .fifo-slot{
+      border-radius:18px;padding:14px;min-height:124px;border:1px solid rgba(255,255,255,.08);
+      display:flex;flex-direction:column;justify-content:space-between;
+    }
+    .fifo-slot.current{
+      background:linear-gradient(180deg, rgba(255,232,55,.92), rgba(242,217,0,.82));
+      color:#08111d;border-color:rgba(255,255,255,.18);
+    }
+    .fifo-slot.next{
+      background:linear-gradient(180deg, rgba(161,180,221,.22), rgba(95,120,175,.20));
+    }
+    .fifo-slot .slot-label{
+      font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:800;opacity:.9
+    }
+    .fifo-slot .slot-text{
+      margin-top:12px;font-size:15px;line-height:1.22;font-weight:800;white-space:pre-wrap;word-break:break-word
+    }
+
+    .perf-layout{display:grid;gap:16px}
+    .rank-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+    .rank-card,.summary-card,.op-card,.labor-card,.chart-card{
+      border:1px solid rgba(255,255,255,.08);border-radius:20px;background:var(--glass-2);padding:16px;
+    }
+    .rank-head,.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+    .rank-head h4,.section-head h4{margin:0;font-size:14px;letter-spacing:.10em;text-transform:uppercase}
+    .rank-head span,.section-head span{color:var(--muted);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+    .rank-list{display:grid;gap:10px}
+    .rank-item{
+      display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.05);
+    }
+    .rank-index{
+      width:34px;height:34px;border-radius:12px;display:grid;place-items:center;font-weight:900;background:linear-gradient(135deg, rgba(106,184,255,.26), rgba(97,231,255,.12));
+    }
+    .rank-name{font-weight:800}
+    .rank-value{font-weight:900}
+    .rank-value.red{color:#ff8fa4}
+    .rank-value.green{color:#8ff0ae}
+    .rank-value.yellow{color:#ffe07a}
+
+    .summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+    .summary-card .value{font-size:34px;font-weight:900;margin:8px 0 4px}
+    .summary-card .label{font-size:11px;color:var(--muted);letter-spacing:.13em;text-transform:uppercase}
+    .summary-card .sub{font-size:13px;color:var(--muted)}
+
+    .ops-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}
+    .op-stack{display:grid;gap:16px}
+    .metric-list{display:grid;gap:8px}
+    .metric-row{
+      display:grid;grid-template-columns:1fr auto;gap:10px;padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.05);
+    }
+    .metric-row .k{color:var(--muted);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+    .metric-row .v{font-weight:900}
+    .split-dual{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .labor-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+    .labor-card h5{margin:0 0 12px;font-size:14px;letter-spacing:.08em;text-transform:uppercase}
+    .labor-card .metric-list{gap:7px}
+    .chart-card canvas{width:100%;max-width:340px;margin:6px auto 0;display:block}
+    .chart-caption{margin-top:10px;font-size:12px;color:var(--muted);text-align:center}
 
     .ticker{
-      position:fixed;
-      left:18px; right:18px; bottom:18px;
-      height:54px;
-      display:flex;
-      align-items:center;
-      overflow:hidden;
-      border:1px solid var(--line);
-      border-radius:18px;
-      background:var(--glass);
-      backdrop-filter:blur(16px);
-      box-shadow:var(--shadow);
-      z-index:5;
+      position:fixed;left:18px;right:18px;bottom:18px;height:54px;display:flex;align-items:center;overflow:hidden;border:1px solid var(--line);border-radius:18px;background:var(--glass);backdrop-filter:blur(16px);box-shadow:var(--shadow);z-index:5;
     }
     .ticker-label{
-      padding:0 16px;
-      height:100%;
-      display:flex; align-items:center;
-      background:linear-gradient(135deg, rgba(255,92,124,.9), rgba(255,138,102,.85));
-      color:#fff;
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      flex:0 0 auto;
+      padding:0 16px;height:100%;display:flex;align-items:center;background:linear-gradient(135deg, rgba(255,92,124,.9), rgba(255,138,102,.85));color:#fff;font-size:12px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;flex:0 0 auto;
     }
     .ticker-track{
-      white-space:nowrap;
-      display:inline-block;
-      padding-left:100%;
-      animation:ticker 28s linear infinite;
-      color:#dce8ff;
-      font-size:14px;
-      letter-spacing:.03em;
+      white-space:nowrap;display:inline-block;padding-left:100%;animation:ticker 30s linear infinite;color:#dce8ff;font-size:14px;letter-spacing:.03em;
     }
-    @keyframes ticker{
-      0%{ transform:translateX(0); }
-      100%{ transform:translateX(-100%); }
+    @keyframes ticker{0%{transform:translateX(0)}100%{transform:translateX(-100%)}}
+
+    @media (max-width:1600px){
+      body{overflow:auto}
+      .shell{grid-template-rows:auto auto;padding-bottom:18px}
+      .topbar{flex-direction:column;align-items:flex-start}
+      .top-actions{width:100%;justify-content:space-between}
+      .content{grid-template-columns:1fr}
+      .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .fifo-row{grid-template-columns:1fr 1fr}
+      .fifo-machine{grid-column:1/-1}
+      .rank-grid,.summary-grid,.ops-grid,.labor-grid{grid-template-columns:1fr}
+      .ticker{position:static;margin:0 18px 18px}
+      .page{height:auto}
     }
-
-    .small{ font-size:12px; color:var(--muted); }
-
-    @media (max-width:1480px){
-      body{ overflow:auto; }
-      .shell{ grid-template-rows:auto auto; padding-bottom:18px; }
-      .topbar{ flex-direction:column; align-items:flex-start; }
-      .top-actions{ width:100%; justify-content:space-between; }
-      .content{ grid-template-columns:1fr; }
-      .cards{ grid-template-columns:repeat(2,minmax(0,1fr)); }
-      .ticker{ position:static; margin:0 18px 18px; }
-      .page{ height:auto; }
-    }
-
     @media (max-width:900px){
-      .cards{ grid-template-columns:1fr; }
-      .split-2{ grid-template-columns:1fr; }
-      .queue-item{ grid-template-columns:1fr; }
-      .queue-right{ text-align:left; min-width:0; }
+      .cards{grid-template-columns:1fr}
+      .queue-item{grid-template-columns:1fr}
+      .queue-right{text-align:left;min-width:0}
+      .fifo-row{grid-template-columns:1fr}
+      .split-dual{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -611,14 +420,12 @@
               <div class="panel-head">
                 <div>
                   <h3 class="panel-title">Crane FIFO</h3>
-                  <div class="panel-sub" id="fifoSub">Live FIFO signal from published sheet</div>
+                  <div class="panel-sub" id="fifoSub">Current plush with staged next plush rotations</div>
                 </div>
-                <div class="kicker">New feed slot</div>
+                <div class="kicker">Sheet-inspired</div>
               </div>
               <div class="panel-body">
-                <div id="fifoContent" class="split">
-                  <div class="empty">Loading FIFO feed…</div>
-                </div>
+                <div id="fifoContent"><div class="empty">Loading FIFO feed…</div></div>
               </div>
             </div>
           </div>
@@ -626,58 +433,75 @@
       </section>
 
       <section id="page-performance" class="page">
-        <div class="content">
-          <div class="left-col">
-            <div class="cards" id="performanceMetrics">
-              <div class="card metric blue">
-                <div class="label">Performance Feed</div>
-                <div class="value">--</div>
-                <div class="sub">Waiting for published CSV</div>
+        <div class="perf-layout">
+          <div class="summary-grid" id="performanceMetrics">
+            <div class="summary-card"><div class="label">Live Rows</div><div class="value">--</div><div class="sub">Waiting for feed</div></div>
+            <div class="summary-card"><div class="label">Overall Crane Payout</div><div class="value">--</div><div class="sub">Auto-detected</div></div>
+            <div class="summary-card"><div class="label">Overall Merch Payout</div><div class="value">--</div><div class="sub">Auto-detected</div></div>
+            <div class="summary-card"><div class="label">Average Labor</div><div class="value">--</div><div class="sub">Auto-detected</div></div>
+          </div>
+
+          <div class="rank-grid" id="top5Grid">
+            <div class="rank-card"><div class="empty">Loading Top 5 panels…</div></div>
+          </div>
+
+          <div class="ops-grid">
+            <div class="op-stack">
+              <div class="op-card">
+                <div class="section-head">
+                  <h4>Bowling / Repair</h4>
+                  <span id="bowlingSub">Live attraction metrics</span>
+                </div>
+                <div class="split-dual">
+                  <div class="metric-list" id="bowlingMetrics"></div>
+                  <div class="metric-list" id="repairMetrics"></div>
+                </div>
               </div>
-              <div class="card metric violet">
-                <div class="label">Signal Rows</div>
-                <div class="value">--</div>
-                <div class="sub">Live performance records</div>
-              </div>
-              <div class="card metric green">
-                <div class="label">Primary KPI</div>
-                <div class="value">--</div>
-                <div class="sub">Auto-detected from sheet</div>
-              </div>
-              <div class="card metric yellow">
-                <div class="label">Coverage</div>
-                <div class="value">--</div>
-                <div class="sub">Filled cells across the feed</div>
+
+              <div class="op-card">
+                <div class="section-head">
+                  <h4>Laser Tag &amp; Gel Blaster</h4>
+                  <span>Revenue &amp; labor spotlight</span>
+                </div>
+                <div class="split-dual">
+                  <div class="metric-list" id="laserMetrics"></div>
+                  <div class="metric-list" id="gelMetrics"></div>
+                </div>
               </div>
             </div>
 
-            <div class="panel">
-              <div class="panel-head">
-                <div>
-                  <h3 class="panel-title">Performance Board</h3>
-                  <div class="panel-sub" id="performanceBoardSub">Auto-built from your Games Performance CSV</div>
-                </div>
-                <div class="small" id="performanceBoardCount">0 cards</div>
+            <div class="chart-card">
+              <div class="section-head">
+                <h4>Revenue Mix</h4>
+                <span>Based on lower revenue &amp; labor section</span>
               </div>
-              <div class="panel-body">
-                <div id="performanceBoard" class="list-cards"></div>
-              </div>
+              <canvas id="revenuePie" width="340" height="340"></canvas>
+              <div class="chart-caption" id="pieCaption">Waiting for revenue categories…</div>
             </div>
           </div>
 
-          <div class="right-col">
-            <div class="panel">
-              <div class="panel-head">
-                <div>
-                  <h3 class="panel-title">Performance Matrix</h3>
-                  <div class="panel-sub">Full live table from the Games Performance sheet</div>
-                </div>
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3 class="panel-title">Revenue &amp; Labor Breakdown</h3>
+                <div class="panel-sub">XD, Redemption, Ropes, Escape Rooms and related sections</div>
               </div>
-              <div class="panel-body">
-                <div id="performanceTableWrap">
-                  <div class="empty">Loading Games Performance feed…</div>
-                </div>
+              <div class="small" id="laborCardCount">0 cards</div>
+            </div>
+            <div class="panel-body">
+              <div class="labor-grid" id="laborGrid"></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head">
+              <div>
+                <h3 class="panel-title">Performance Matrix</h3>
+                <div class="panel-sub" id="performanceBoardSub">Custom summary plus full live sheet view</div>
               </div>
+            </div>
+            <div class="panel-body">
+              <div id="performanceTableWrap"><div class="empty">Loading performance matrix…</div></div>
             </div>
           </div>
         </div>
@@ -703,37 +527,20 @@
       let row = [];
       let cell = "";
       let inQuotes = false;
-
       for(let i = 0; i < text.length; i++){
         const ch = text[i];
         const next = text[i + 1];
-
         if(ch === '"'){
-          if(inQuotes && next === '"'){
-            cell += '"';
-            i++;
-          } else {
-            inQuotes = !inQuotes;
-          }
+          if(inQuotes && next === '"'){ cell += '"'; i++; }
+          else inQuotes = !inQuotes;
         } else if(ch === ',' && !inQuotes){
-          row.push(cell);
-          cell = "";
+          row.push(cell); cell = "";
         } else if((ch === '\n' || ch === '\r') && !inQuotes){
-          if(ch === '\r' && next === '\n'){ i++; }
-          row.push(cell);
-          rows.push(row);
-          row = [];
-          cell = "";
-        } else {
-          cell += ch;
-        }
+          if(ch === '\r' && next === '\n') i++;
+          row.push(cell); rows.push(row); row = []; cell = "";
+        } else cell += ch;
       }
-
-      if(cell.length || row.length){
-        row.push(cell);
-        rows.push(row);
-      }
-
+      if(cell.length || row.length){ row.push(cell); rows.push(row); }
       return rows.map(r => r.map(c => (c || "").trim()));
     }
 
@@ -742,57 +549,60 @@
         "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
       }[s]));
     }
-
     function safeNumber(value){
       const num = parseFloat(String(value).replace(/[^0-9.\-]/g, ""));
       return Number.isFinite(num) ? num : null;
     }
-
-    function prettifyLabel(value){
-      return String(value || "")
-        .replace(/[_-]+/g, " ")
-        .replace(/\s+/g, " ")
-        .trim()
-        .replace(/\b\w/g, c => c.toUpperCase());
-    }
-
     function formatMetric(value){
       if(value === null || value === undefined || value === "") return "--";
       if(typeof value === "number"){
-        if(Math.abs(value) >= 1000) return value.toLocaleString();
-        if(Math.abs(value) % 1 !== 0) return value.toFixed(1);
+        if(Math.abs(value) >= 1000) return value.toLocaleString(undefined, {maximumFractionDigits: 2});
+        if(Math.abs(value) % 1 !== 0) return value.toFixed(2);
         return String(value);
       }
       return String(value);
     }
-
+    function prettifyLabel(value){
+      return String(value || "").replace(/[_-]+/g, " ").replace(/\s+/g, " ").trim().replace(/\b\w/g, c => c.toUpperCase());
+    }
     function findCell(rows, label){
       const lower = label.toLowerCase();
       for(let r = 0; r < rows.length; r++){
         for(let c = 0; c < rows[r].length; c++){
-          if((rows[r][c] || "").toLowerCase() === lower){
-            return { row: r, col: c };
-          }
+          if((rows[r][c] || "").toLowerCase() === lower) return { row:r, col:c };
         }
       }
       return null;
     }
-
+    function findCellContains(rows, label){
+      const lower = label.toLowerCase();
+      for(let r = 0; r < rows.length; r++){
+        for(let c = 0; c < rows[r].length; c++){
+          if((rows[r][c] || "").toLowerCase().includes(lower)) return { row:r, col:c };
+        }
+      }
+      return null;
+    }
+    function normalizeRows(rows){
+      const width = Math.max(...rows.map(r => r.length), 0);
+      return rows.map(row => {
+        const next = row.slice();
+        while(next.length < width) next.push("");
+        return next;
+      });
+    }
     function rowNonEmptyCount(row, start = 0){
       return row.slice(start).filter(v => String(v || "").trim() !== "").length;
     }
-
     function isHeaderLike(cells){
       const joined = cells.join(" ").toLowerCase();
       return joined.includes("machine") || joined.includes("item") || joined.includes("days left") || joined.includes("runout");
     }
-
     function normalizeStatus(v){
       const s = String(v || "").trim().toUpperCase();
-      if(s === "CRITICAL" || s === "ORDER" || s === "OK") return s;
+      if(["CRITICAL","ORDER","OK"].includes(s)) return s;
       return "";
     }
-
     function statusBadge(status){
       const normalized = normalizeStatus(status);
       if(!normalized) return `<span class="badge status-neutral">${escapeHtml(status || "Live")}</span>`;
@@ -815,12 +625,10 @@
       }
       return out;
     }
-
     function extractSummary(rows){
       const pos = findCell(rows, "Summary Metrics");
-      const summary = { total: null, critical: null, orders: null };
+      const summary = { total:null, critical:null, orders:null };
       if(!pos) return summary;
-
       for(let r = pos.row + 1; r < Math.min(rows.length, pos.row + 8); r++){
         const label = (rows[r]?.[pos.col] || "").toLowerCase();
         const value = rows[r]?.[pos.col + 1] || "";
@@ -830,7 +638,6 @@
       }
       return summary;
     }
-
     function extractBlockRows(rows, label){
       const raw = readSectionRows(rows, label, 12);
       return raw.map(cells => {
@@ -844,11 +651,9 @@
         return { machine, item, onHand, status, orderQty, daysLeft, runoutDate };
       }).filter(x => x.machine || x.item);
     }
-
     function extractDaysLeftFilter(rows){
       const pos = findCell(rows, "Days Left Filter");
       if(!pos) return [];
-
       const out = [];
       for(let r = pos.row + 1; r < Math.min(rows.length, pos.row + 25); r++){
         const row = rows[r] || [];
@@ -857,7 +662,6 @@
         if(cells[0] === "#N/A") continue;
         if(isHeaderLike(cells)) continue;
         if(rowNonEmptyCount(cells) < 3) continue;
-
         const machine = cells[0] || "";
         const item = cells[1] || "";
         const daysLeft = safeNumber(cells[2]);
@@ -868,11 +672,9 @@
         if(!(machine || item)) continue;
         out.push({ machine, item, daysLeft, runoutDate, status, orderQty, onHand });
       }
-
       out.sort((a,b) => (a.daysLeft ?? 99999) - (b.daysLeft ?? 99999));
       return out;
     }
-
     function combinedPriority({daysLeftRows, criticalRows, orderRows}){
       if(daysLeftRows.length) return daysLeftRows;
       const merged = [...criticalRows, ...orderRows].filter(x => x.machine || x.item);
@@ -898,16 +700,13 @@
         </tr>
       `).join("");
     }
-
     function renderPriorityQueue(rows){
       const root = document.getElementById("priorityQueue");
       document.getElementById("priorityCount").textContent = `${rows.length} item${rows.length === 1 ? "" : "s"}`;
-
       if(!rows.length){
         root.innerHTML = `<div class="empty">No Days Left Filter rows detected yet.<br/>Once the sheet spills values into that block, they will appear here automatically.</div>`;
         return;
       }
-
       root.innerHTML = rows.slice(0, 8).map((row, idx) => {
         const days = row.daysLeft;
         const color = days !== null && days <= 7 ? "red" : days !== null && days <= 14 ? "yellow" : "green";
@@ -930,7 +729,6 @@
         `;
       }).join("");
     }
-
     function renderFeed(rows){
       const root = document.getElementById("actionFeed");
       if(!rows.length){
@@ -956,9 +754,350 @@
       }).join("");
     }
 
-    function buildTicker(inventoryRows, fifoInfo, performanceInfo){
-      const parts = [];
+    function parseGenericDataset(rows){
+      const clean = rows.filter(row => row.some(cell => String(cell || "").trim() !== ""));
+      if(!clean.length) return { headers:[], records:[] };
+      const normalized = normalizeRows(clean);
+      let bestIndex = 0, bestScore = -1;
+      for(let i=0;i<Math.min(normalized.length, 12);i++){
+        const score = normalized[i].filter(v => String(v || "").trim() !== "").length;
+        if(score >= 2 && score > bestScore){ bestScore = score; bestIndex = i; }
+      }
+      const headers = normalized[bestIndex].map((value, index) => prettifyLabel(value || `Column ${index + 1}`));
+      const records = normalized.slice(bestIndex + 1)
+        .filter(row => row.some(cell => String(cell || "").trim() !== ""))
+        .map(row => Object.fromEntries(headers.map((header, index) => [header, row[index] || ""])));
+      return { headers, records };
+    }
+    function renderGenericTable(headers, records, limitRows = 25){
+      if(!headers.length || !records.length) return `<div class="empty">No rows are available in this feed right now.</div>`;
+      const limited = records.slice(0, limitRows);
+      return `<table>
+        <thead><tr>${headers.map(h => `<th>${escapeHtml(h)}</th>`).join("")}</tr></thead>
+        <tbody>${limited.map(record => `<tr>${headers.map(h => `<td>${escapeHtml(record[h])}</td>`).join("")}</tr>`).join("")}</tbody>
+      </table>`;
+    }
 
+    function parseFifoSheet(rows){
+      const normalized = normalizeRows(rows);
+      let headerRow = -1;
+      let craneCol = -1;
+      for(let r=0;r<normalized.length;r++){
+        for(let c=0;c<normalized[r].length;c++){
+          if((normalized[r][c] || "").toLowerCase() === "crane"){
+            headerRow = r; craneCol = c; break;
+          }
+        }
+        if(headerRow !== -1) break;
+      }
+      if(headerRow === -1){
+        const generic = parseGenericDataset(rows);
+        return {
+          rows: generic.records.map(rec => {
+            const keys = Object.keys(rec);
+            return { machine: rec[keys[0]] || "Machine", current: rec[keys[1]] || "", nexts: keys.slice(2,5).map(k => rec[k]).filter(Boolean) };
+          }),
+          headers: generic.headers
+        };
+      }
+
+      const headers = normalized[headerRow].slice(craneCol).map(v => String(v || "").trim());
+      const currentIndex = headers.findIndex(h => h.toLowerCase().includes("current"));
+      const nextIndices = headers.map((h,i) => h.toLowerCase().includes("next") ? i : -1).filter(i => i >= 0);
+
+      const out = [];
+      for(let r = headerRow + 1; r < normalized.length; r++){
+        const row = normalized[r].slice(craneCol);
+        if(row.every(v => !String(v || "").trim())) continue;
+        const machine = row[0] || "";
+        if(!machine) continue;
+        const current = currentIndex >= 0 ? row[currentIndex] || "" : row[1] || "";
+        const nexts = nextIndices.length ? nextIndices.map(i => row[i] || "").filter(Boolean) : row.slice(2).filter(Boolean);
+        out.push({ machine, current, nexts });
+      }
+      return { rows: out, headers };
+    }
+
+    function renderFifo(view){
+      const root = document.getElementById("fifoContent");
+      document.getElementById("fifoSub").textContent = `${view.rows.length} crane row${view.rows.length === 1 ? "" : "s"} live from FIFO sheet`;
+
+      if(!view.rows.length){
+        root.innerHTML = `<div class="empty">No FIFO rows detected from the published sheet.</div>`;
+        return;
+      }
+
+      root.innerHTML = `<div class="fifo-grid">
+        ${view.rows.map(row => {
+          const slots = [row.current || "", ...(row.nexts || [])].slice(0,4);
+          while(slots.length < 4) slots.push("");
+          return `<div class="fifo-row">
+            <div class="fifo-machine">
+              <div class="tag">Crane</div>
+              <div class="name">${escapeHtml(row.machine)}</div>
+            </div>
+            <div class="fifo-slot current">
+              <div class="slot-label">Current Plush</div>
+              <div class="slot-text">${escapeHtml(slots[0] || "—")}</div>
+            </div>
+            <div class="fifo-slot next">
+              <div class="slot-label">Next Plush</div>
+              <div class="slot-text">${escapeHtml(slots[1] || "—")}</div>
+            </div>
+            <div class="fifo-slot next">
+              <div class="slot-label">Next Plush</div>
+              <div class="slot-text">${escapeHtml(slots[2] || "—")}</div>
+            </div>
+            <div class="fifo-slot next">
+              <div class="slot-label">Next Plush</div>
+              <div class="slot-text">${escapeHtml(slots[3] || "—")}</div>
+            </div>
+          </div>`;
+        }).join("")}
+      </div>`;
+    }
+
+    function readLabeledList(rows, sectionLabel, maxRows=10){
+      const pos = findCellContains(rows, sectionLabel);
+      if(!pos) return [];
+      const out = [];
+      for(let r = pos.row + 1; r < Math.min(rows.length, pos.row + 1 + maxRows); r++){
+        const row = rows[r] || [];
+        const key = String(row[pos.col] || "").trim();
+        const val = String(row[pos.col + 1] || "").trim();
+        if(!key && !val) break;
+        out.push({ key, value: val });
+      }
+      return out.filter(x => x.key || x.value);
+    }
+
+    function findRightNeighborNumber(rows, label){
+      const pos = findCellContains(rows, label);
+      if(!pos) return null;
+      return rows[pos.row]?.[pos.col + 1] || null;
+    }
+
+    function readTop5Block(rows, label){
+      const pos = findCell(rows, label);
+      if(!pos) return [];
+      const items = [];
+      for(let r = pos.row + 1; r < Math.min(rows.length, pos.row + 8); r++){
+        const game = String(rows[r]?.[pos.col] || "").trim();
+        const value = String(rows[r]?.[pos.col + 1] || "").trim();
+        if(!game && !value) break;
+        if(game.toLowerCase() === "game" || value.toLowerCase() === "amount" || value.toLowerCase() === "percentage") continue;
+        items.push({ name: game, value });
+      }
+      return items.filter(x => x.name || x.value).slice(0,5);
+    }
+
+    function readMetricByLabel(rows, label){
+      const pos = findCellContains(rows, label);
+      if(!pos) return null;
+      for(let offset = 1; offset <= 2; offset++){
+        const value = rows[pos.row]?.[pos.col + offset];
+        if(String(value || "").trim() !== "") return String(value).trim();
+      }
+      return null;
+    }
+
+    function readAreaMetrics(rows, heading, labels){
+      const pos = findCellContains(rows, heading);
+      if(!pos) return [];
+      const out = [];
+      for(const label of labels){
+        let found = null;
+        for(let r = pos.row; r < Math.min(rows.length, pos.row + 12); r++){
+          for(let c = pos.col; c < Math.min((rows[r] || []).length, pos.col + 4); c++){
+            const cell = String(rows[r]?.[c] || "").trim().toLowerCase();
+            if(cell === label.toLowerCase()){
+              for(let k = 1; k <= 2; k++){
+                const val = String(rows[r]?.[c + k] || "").trim();
+                if(val){ found = val; break; }
+              }
+            }
+            if(found) break;
+          }
+          if(found) break;
+        }
+        out.push({ key: label, value: found || "—" });
+      }
+      return out;
+    }
+
+    function readColumnSection(rows, title){
+      const pos = findCellContains(rows, title);
+      if(!pos) return null;
+      const metrics = [];
+      for(let r = pos.row + 1; r < Math.min(rows.length, pos.row + 8); r++){
+        const key = String(rows[r]?.[pos.col] || "").trim();
+        const value = String(rows[r]?.[pos.col + 1] || "").trim();
+        if(!key && !value) break;
+        metrics.push({ key, value });
+      }
+      return { title, metrics };
+    }
+
+    function parsePerformance(rows){
+      const topRevenue = readTop5Block(rows, "Revenue");
+      const redemptionPayout = readTop5Block(rows, "Redemption Payout");
+      const craneCost = readTop5Block(rows, "Crane Cost");
+
+      const summary = {
+        gameTotalCost: readMetricByLabel(rows, "Game Total Cost"),
+        overallCranePayout: readMetricByLabel(rows, "Overall Crane Payout"),
+        overallMerchPayout: readMetricByLabel(rows, "Overall Merch Payout"),
+        averageLabor: readMetricByLabel(rows, "Average Labor Overall")
+      };
+
+      const bowling = readAreaMetrics(rows, "Bowling", ["Revenue", "Labor %", "Labor $", "Pin Sales"]);
+      const repair = readAreaMetrics(rows, "Repair Issues", ["Lane 1", "Lane 2", "Lane 3", "Lane 4"]);
+      const laserTag = readAreaMetrics(rows, "Laser Tag", ["Sales", "Sched Hours", "Labor $", "Labor %"]);
+      const gelBlaster = readAreaMetrics(rows, "Gel Blaster", ["Sales", "Sched Hours", "Labor $", "Labor %"]);
+
+      const laborSections = ["XD","Redemption","Ropes","Escape Rooms"].map(name => readColumnSection(rows, name)).filter(Boolean);
+
+      const revenuePie = laborSections.map(section => ({
+        name: section.title,
+        value: safeNumber(section.metrics.find(m => m.key.toLowerCase() === "sales")?.value)
+      })).filter(x => x.value !== null);
+
+      const generic = parseGenericDataset(rows);
+
+      return {
+        topRevenue,
+        redemptionPayout,
+        craneCost,
+        summary,
+        bowling,
+        repair,
+        laserTag,
+        gelBlaster,
+        laborSections,
+        revenuePie,
+        generic
+      };
+    }
+
+    function renderMetricList(targetId, items){
+      const root = document.getElementById(targetId);
+      if(!items.length){
+        root.innerHTML = `<div class="empty">No metrics found.</div>`;
+        return;
+      }
+      root.innerHTML = items.map(item => `<div class="metric-row"><div class="k">${escapeHtml(item.key || "Metric")}</div><div class="v">${escapeHtml(item.value || "—")}</div></div>`).join("");
+    }
+
+    function renderRankCard(title, subtitle, items, mode="neutral"){
+      const valueClass = mode === "red" ? "red" : mode === "green" ? "green" : mode === "yellow" ? "yellow" : "";
+      if(!items.length){
+        return `<div class="rank-card"><div class="empty">${escapeHtml(title)} not detected in the sheet.</div></div>`;
+      }
+      return `<div class="rank-card">
+        <div class="rank-head"><h4>${escapeHtml(title)}</h4><span>${escapeHtml(subtitle)}</span></div>
+        <div class="rank-list">
+          ${items.map((item, idx) => `<div class="rank-item">
+            <div class="rank-index">${idx + 1}</div>
+            <div class="rank-name">${escapeHtml(item.name || "Item")}</div>
+            <div class="rank-value ${valueClass}">${escapeHtml(item.value || "—")}</div>
+          </div>`).join("")}
+        </div>
+      </div>`;
+    }
+
+    function renderPerformance(view){
+      const metrics = [
+        { label:"Live Rows", value:view.generic.records.length || "--", sub:"Performance rows visible" },
+        { label:"Overall Crane Payout", value:view.summary.overallCranePayout || "--", sub:"Executive sheet KPI" },
+        { label:"Overall Merch Payout", value:view.summary.overallMerchPayout || "--", sub:"Executive sheet KPI" },
+        { label:"Average Labor Overall", value:view.summary.averageLabor || "--", sub:"Executive sheet KPI" }
+      ];
+      document.getElementById("performanceMetrics").innerHTML = metrics.map(m => `
+        <div class="summary-card">
+          <div class="label">${escapeHtml(m.label)}</div>
+          <div class="value">${escapeHtml(m.value)}</div>
+          <div class="sub">${escapeHtml(m.sub)}</div>
+        </div>
+      `).join("");
+
+      document.getElementById("top5Grid").innerHTML = [
+        renderRankCard("Top 5 Revenue", "Highest grossing games", view.topRevenue, "green"),
+        renderRankCard("Redemption Payout", "Highest payout percentages", view.redemptionPayout, "yellow"),
+        renderRankCard("Crane Cost", "Highest crane cost percentages", view.craneCost, "red")
+      ].join("");
+
+      renderMetricList("bowlingMetrics", view.bowling);
+      renderMetricList("repairMetrics", view.repair);
+      renderMetricList("laserMetrics", view.laserTag);
+      renderMetricList("gelMetrics", view.gelBlaster);
+      document.getElementById("bowlingSub").textContent = view.summary.gameTotalCost ? `Game Total Cost ${view.summary.gameTotalCost}` : "Live attraction metrics";
+
+      const laborGrid = document.getElementById("laborGrid");
+      document.getElementById("laborCardCount").textContent = `${view.laborSections.length} cards`;
+      if(!view.laborSections.length){
+        laborGrid.innerHTML = `<div class="empty">No lower revenue & labor blocks found.</div>`;
+      } else {
+        laborGrid.innerHTML = view.laborSections.map(section => `
+          <div class="labor-card">
+            <h5>${escapeHtml(section.title)}</h5>
+            <div class="metric-list">
+              ${section.metrics.map(item => `<div class="metric-row"><div class="k">${escapeHtml(item.key || "Metric")}</div><div class="v">${escapeHtml(item.value || "—")}</div></div>`).join("")}
+            </div>
+          </div>
+        `).join("");
+      }
+
+      drawRevenuePie(view.revenuePie);
+      document.getElementById("performanceBoardSub").textContent =
+        view.summary.gameTotalCost ? `Game Total Cost ${view.summary.gameTotalCost} • custom executive board view` : "Custom executive board view";
+
+      document.getElementById("performanceTableWrap").innerHTML = renderGenericTable(view.generic.headers, view.generic.records, 50);
+    }
+
+    function drawRevenuePie(items){
+      const canvas = document.getElementById("revenuePie");
+      const caption = document.getElementById("pieCaption");
+      const ctx = canvas.getContext("2d");
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if(!items.length){
+        caption.textContent = "Revenue categories were not found in the lower section.";
+        ctx.fillStyle = "rgba(255,255,255,.14)";
+        ctx.beginPath();
+        ctx.arc(170, 170, 110, 0, Math.PI * 2);
+        ctx.fill();
+        return;
+      }
+
+      const total = items.reduce((sum, item) => sum + item.value, 0);
+      const colors = ["#5e9bff","#f3b300","#2fd39c","#ff6b8c","#a88dff","#ffb561"];
+      let start = -Math.PI / 2;
+      items.forEach((item, idx) => {
+        const slice = (item.value / total) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(170, 170);
+        ctx.arc(170, 170, 110, start, start + slice);
+        ctx.closePath();
+        ctx.fillStyle = colors[idx % colors.length];
+        ctx.fill();
+        start += slice;
+      });
+
+      ctx.beginPath();
+      ctx.arc(170, 170, 56, 0, Math.PI * 2);
+      ctx.fillStyle = "#0b1d35";
+      ctx.fill();
+
+      ctx.fillStyle = "#eaf2ff";
+      ctx.font = "700 18px Inter, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(`$${Math.round(total).toLocaleString()}`, 170, 176);
+
+      caption.textContent = items.map(item => `${item.name} ${Math.round((item.value / total) * 100)}%`).join(" • ");
+    }
+
+    function buildTicker(inventoryRows, fifoView, perfView){
+      const parts = [];
       if(inventoryRows?.length){
         parts.push(inventoryRows.slice(0, 5).map(row => {
           const days = row.daysLeft ?? "--";
@@ -966,15 +1105,13 @@
           return `${row.machine || "Machine"} / ${row.item || "Item"} — ${status} — ${days} days left${row.orderQty ? ` — order ${row.orderQty}` : ""}`;
         }).join("   ✦   "));
       }
-
-      if(fifoInfo?.summaryLine){
-        parts.push(`Crane FIFO — ${fifoInfo.summaryLine}`);
+      if(fifoView?.rows?.length){
+        const fifoLine = fifoView.rows.slice(0, 3).map(r => `${r.machine} current ${r.current || "—"}`).join("   ✦   ");
+        parts.push(`Crane FIFO — ${fifoLine}`);
       }
-
-      if(performanceInfo?.heroLine){
-        parts.push(`Games Performance — ${performanceInfo.heroLine}`);
+      if(perfView?.summary){
+        parts.push(`Games Performance — Crane Payout ${perfView.summary.overallCranePayout || "--"} • Merch Payout ${perfView.summary.overallMerchPayout || "--"} • Avg Labor ${perfView.summary.averageLabor || "--"}`);
       }
-
       return parts.filter(Boolean).join("   ✦   ") || "No urgent runout items detected in the live sheets right now.";
     }
 
@@ -982,242 +1119,21 @@
       document.getElementById("metricTotal").textContent = summary.total ?? "--";
       document.getElementById("metricCritical").textContent = summary.critical ?? "--";
       document.getElementById("metricOrders").textContent = summary.orders ?? "--";
-
       if(priorityRows.length){
         const next = priorityRows[0];
         document.getElementById("metricNextRunout").textContent = next.daysLeft ?? "--";
-        document.getElementById("metricNextRunoutSub").textContent =
-          `${next.machine || "Machine"}${next.item ? " • " + next.item : ""}${next.runoutDate ? " • " + next.runoutDate : ""}`;
+        document.getElementById("metricNextRunoutSub").textContent = `${next.machine || "Machine"}${next.item ? " • " + next.item : ""}${next.runoutDate ? " • " + next.runoutDate : ""}`;
       } else {
         document.getElementById("metricNextRunout").textContent = "--";
         document.getElementById("metricNextRunoutSub").textContent = "No runout rows detected";
       }
     }
-
-    function findHeaderRow(rows){
-      let bestIndex = 0;
-      let bestScore = -1;
-      const limit = Math.min(rows.length, 12);
-
-      for(let i = 0; i < limit; i++){
-        const row = rows[i] || [];
-        const nonEmpty = row.filter(v => String(v || "").trim() !== "");
-        const score = nonEmpty.length;
-        if(score >= 2 && score > bestScore){
-          bestScore = score;
-          bestIndex = i;
-        }
-      }
-      return bestIndex;
-    }
-
-    function normalizeRows(rows){
-      const width = Math.max(...rows.map(r => r.length), 0);
-      return rows.map(row => {
-        const next = row.slice();
-        while(next.length < width) next.push("");
-        return next;
-      });
-    }
-
-    function parseGenericDataset(rows){
-      const clean = rows.filter(row => row.some(cell => String(cell || "").trim() !== ""));
-      if(!clean.length) return { headers: [], records: [] };
-
-      const normalized = normalizeRows(clean);
-      const headerIndex = findHeaderRow(normalized);
-      const headers = normalized[headerIndex].map((value, index) => prettifyLabel(value || `Column ${index + 1}`));
-
-      const records = normalized.slice(headerIndex + 1)
-        .filter(row => row.some(cell => String(cell || "").trim() !== ""))
-        .map(row => Object.fromEntries(headers.map((header, index) => [header, row[index] || ""])));
-
-      return { headers, records };
-    }
-
-    function getColumnProfiles(headers, records){
-      return headers.map(header => {
-        const values = records.map(record => record[header]);
-        const numericValues = values.map(v => safeNumber(v)).filter(v => v !== null);
-        return {
-          header,
-          values,
-          numericValues,
-          numericRatio: values.length ? numericValues.length / values.length : 0
-        };
-      });
-    }
-
-    function computeFilledPercent(headers, records){
-      if(!headers.length || !records.length) return 0;
-      const total = headers.length * records.length;
-      let filled = 0;
-      records.forEach(record => {
-        headers.forEach(header => {
-          if(String(record[header] || "").trim() !== "") filled++;
-        });
-      });
-      return Math.round((filled / total) * 100);
-    }
-
-    function renderGenericTable(headers, records, limitRows = 25){
-      if(!headers.length || !records.length){
-        return `<div class="empty">No rows are available in this feed right now.</div>`;
-      }
-
-      const limited = records.slice(0, limitRows);
-      return `
-        <table>
-          <thead>
-            <tr>${headers.map(header => `<th>${escapeHtml(header)}</th>`).join("")}</tr>
-          </thead>
-          <tbody>
-            ${limited.map(record => `
-              <tr>${headers.map(header => `<td>${escapeHtml(record[header])}</td>`).join("")}</tr>
-            `).join("")}
-          </tbody>
-        </table>
-      `;
-    }
-
-    function computeFifoView(rows){
-      const dataset = parseGenericDataset(rows);
-      const profiles = getColumnProfiles(dataset.headers, dataset.records);
-      const numericProfile = profiles.find(profile => profile.numericRatio >= 0.6 && profile.numericValues.length);
-      const summaryLine = dataset.records.length
-        ? `${dataset.records.length} live row${dataset.records.length === 1 ? "" : "s"} tracked${numericProfile ? ` • ${prettifyLabel(numericProfile.header)} avg ${formatMetric(numericProfile.numericValues.reduce((a,b) => a+b, 0) / numericProfile.numericValues.length)}` : ""}`
-        : "No live rows";
-
-      return { ...dataset, summaryLine };
-    }
-
-    function renderFifo(view){
-      const root = document.getElementById("fifoContent");
-      document.getElementById("fifoSub").textContent = view.summaryLine || "Live FIFO signal from published sheet";
-
-      if(!view.records.length){
-        root.innerHTML = `<div class="empty">No FIFO rows detected from the published sheet.</div>`;
-        return;
-      }
-
-      const profiles = getColumnProfiles(view.headers, view.records);
-      const topProfiles = profiles.filter(p => p.numericRatio >= 0.6 && p.numericValues.length).slice(0, 2);
-      const cards = (topProfiles.length ? topProfiles : [{header:"Live Rows", numericValues:[view.records.length]}, {header:"Columns", numericValues:[view.headers.length]}]);
-
-      root.innerHTML = `
-        <div class="split split-2">
-          ${cards.map((profile, idx) => {
-            const avg = profile.numericValues.length ? profile.numericValues.reduce((a,b) => a+b, 0) / profile.numericValues.length : null;
-            const colorClass = ["blue","green","violet","yellow"][idx % 4];
-            return `
-              <div class="card metric ${colorClass}">
-                <div class="label">${escapeHtml(prettifyLabel(profile.header))}</div>
-                <div class="value">${escapeHtml(formatMetric(avg ?? profile.numericValues[0] ?? "--"))}</div>
-                <div class="sub">${profile.header === "Live Rows" ? "Rows currently visible" : "Average across visible FIFO feed"}</div>
-              </div>
-            `;
-          }).join("")}
-        </div>
-        ${renderGenericTable(view.headers, view.records, 10)}
-      `;
-    }
-
-    function derivePerformanceSummary(rows){
-      const dataset = parseGenericDataset(rows);
-      const profiles = getColumnProfiles(dataset.headers, dataset.records);
-      const numericProfiles = profiles
-        .filter(profile => profile.numericRatio >= 0.6 && profile.numericValues.length)
-        .sort((a,b) => b.numericValues.length - a.numericValues.length);
-
-      const filledPercent = computeFilledPercent(dataset.headers, dataset.records);
-      const primaryNumeric = numericProfiles[0] || null;
-      const labelField = (profiles.find(profile => profile.numericRatio < 0.4 && profile.header)?.header) || dataset.headers[0] || "Row";
-
-      const metrics = [
-        { label: "Live Rows", value: dataset.records.length, sub: "Performance records in feed", color: "blue" },
-        { label: "Data Columns", value: dataset.headers.length, sub: "Fields auto-detected", color: "violet" },
-        {
-          label: primaryNumeric ? prettifyLabel(primaryNumeric.header) : "Primary KPI",
-          value: primaryNumeric ? (primaryNumeric.numericValues[primaryNumeric.numericValues.length - 1] ?? primaryNumeric.numericValues[0]) : "--",
-          sub: primaryNumeric ? "Latest visible numeric signal" : "No numeric KPI detected",
-          color: "green"
-        },
-        { label: "Coverage", value: `${filledPercent}%`, sub: "Filled cells across feed", color: "yellow" }
-      ];
-
-      let boardItems = [];
-      let heroLine = `${dataset.records.length} live row${dataset.records.length === 1 ? "" : "s"} • ${dataset.headers.length} columns`;
-
-      if(primaryNumeric){
-        boardItems = dataset.records.map((record, index) => ({
-          title: record[labelField] || `Row ${index + 1}`,
-          kpi: safeNumber(record[primaryNumeric.header]),
-          meta: dataset.headers
-            .filter(header => header !== labelField && header !== primaryNumeric.header)
-            .slice(0, 3)
-            .map(header => `${header}: ${record[header] || "—"}`)
-        }))
-        .filter(item => item.kpi !== null)
-        .sort((a,b) => b.kpi - a.kpi)
-        .slice(0, 8);
-
-        const avg = primaryNumeric.numericValues.reduce((a,b) => a+b, 0) / primaryNumeric.numericValues.length;
-        heroLine = `${prettifyLabel(primaryNumeric.header)} avg ${formatMetric(avg)} • ${dataset.records.length} live row${dataset.records.length === 1 ? "" : "s"}`;
-      } else {
-        boardItems = dataset.records.slice(0, 8).map((record, index) => ({
-          title: record[labelField] || `Row ${index + 1}`,
-          kpi: null,
-          meta: dataset.headers.slice(1, 4).map(header => `${header}: ${record[header] || "—"}`)
-        }));
-      }
-
-      return { ...dataset, metrics, boardItems, heroLine };
-    }
-
-    function renderPerformance(view){
-      document.getElementById("performanceMetrics").innerHTML = view.metrics.map(metric => `
-        <div class="card metric ${metric.color}">
-          <div class="label">${escapeHtml(metric.label)}</div>
-          <div class="value">${escapeHtml(formatMetric(metric.value))}</div>
-          <div class="sub">${escapeHtml(metric.sub)}</div>
-        </div>
-      `).join("");
-
-      document.getElementById("performanceBoardSub").textContent = view.heroLine;
-      document.getElementById("performanceBoardCount").textContent = `${view.boardItems.length} cards`;
-
-      const boardRoot = document.getElementById("performanceBoard");
-      if(!view.boardItems.length){
-        boardRoot.innerHTML = `<div class="empty">No performance records are available right now.</div>`;
-      } else {
-        boardRoot.innerHTML = view.boardItems.map(item => `
-          <div class="list-card">
-            <div class="list-top">
-              <div class="list-name">${escapeHtml(item.title)}</div>
-              <div class="list-kpi">${item.kpi === null ? "Live" : escapeHtml(formatMetric(item.kpi))}</div>
-            </div>
-            <div class="list-meta">
-              ${item.meta.map(line => `<span>${escapeHtml(line)}</span>`).join("")}
-            </div>
-          </div>
-        `).join("");
-      }
-
-      document.getElementById("performanceTableWrap").innerHTML = renderGenericTable(view.headers, view.records, 30);
-    }
-
-    function setSyncState(text){
-      document.getElementById("syncState").textContent = text;
-    }
-
+    function setSyncState(text){ document.getElementById("syncState").textContent = text; }
     function activateTab(tab){
-      document.querySelectorAll(".tab-btn").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.tab === tab);
-      });
+      document.querySelectorAll(".tab-btn").forEach(btn => btn.classList.toggle("active", btn.dataset.tab === tab));
       document.getElementById("page-inventory").classList.toggle("active", tab === "inventory");
       document.getElementById("page-performance").classList.toggle("active", tab === "performance");
     }
-
     async function fetchCsv(url){
       const response = await fetch(url, { cache: "no-store" });
       if(!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -1243,22 +1159,16 @@
         renderPriorityQueue(priorityRows);
         renderFeed(priorityRows);
         renderTableRows("priorityTableBody", priorityRows.map(r => ({
-          machine:r.machine,
-          item:r.item,
-          onHand:r.onHand ?? "",
-          status:r.status,
-          orderQty:r.orderQty,
-          daysLeft:r.daysLeft,
-          runoutDate:r.runoutDate
+          machine:r.machine, item:r.item, onHand:r.onHand ?? "", status:r.status, orderQty:r.orderQty, daysLeft:r.daysLeft, runoutDate:r.runoutDate
         })));
 
-        const fifoView = computeFifoView(fifoRows);
+        const fifoView = parseFifoSheet(fifoRows);
         renderFifo(fifoView);
 
-        const performanceView = derivePerformanceSummary(performanceRows);
-        renderPerformance(performanceView);
+        const perfView = parsePerformance(performanceRows);
+        renderPerformance(perfView);
 
-        document.getElementById("tickerTrack").textContent = buildTicker(priorityRows, fifoView, performanceView);
+        document.getElementById("tickerTrack").textContent = buildTicker(priorityRows, fifoView, perfView);
         setSyncState("Live");
       } catch (err){
         console.error(err);
@@ -1271,10 +1181,7 @@
       }
     }
 
-    document.querySelectorAll(".tab-btn").forEach(btn => {
-      btn.addEventListener("click", () => activateTab(btn.dataset.tab));
-    });
-
+    document.querySelectorAll(".tab-btn").forEach(btn => btn.addEventListener("click", () => activateTab(btn.dataset.tab)));
     activateTab("inventory");
     loadDashboard();
     setInterval(loadDashboard, CONFIG.refreshMs);
