@@ -5,1258 +5,879 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Crane Control Room</title>
   <style>
-    :root {
-      --bg-1: #050816;
-      --bg-2: #081126;
-      --panel: rgba(10, 18, 38, 0.66);
-      --panel-2: rgba(255, 255, 255, 0.05);
-      --line: rgba(255, 255, 255, 0.09);
-      --text: #ebf2ff;
-      --muted: #9cb0d3;
-      --cyan: #52d6ff;
-      --blue: #5a8cff;
-      --violet: #8e6dff;
-      --green: #37e38a;
-      --yellow: #ffd452;
-      --red: #ff5f7b;
-      --shadow: 0 24px 60px rgba(0,0,0,.38);
-      --glow-cyan: 0 0 30px rgba(82,214,255,.18);
-      --glow-red: 0 0 28px rgba(255,95,123,.18);
-      --glow-yellow: 0 0 28px rgba(255,212,82,.18);
-      --radius: 24px;
+    :root{
+      --bg-1:#07111f;
+      --bg-2:#0b1d35;
+      --panel:rgba(10,22,40,.72);
+      --panel-2:rgba(255,255,255,.06);
+      --line:rgba(255,255,255,.10);
+      --text:#eaf2ff;
+      --muted:#9fb2cf;
+      --blue:#6ab8ff;
+      --cyan:#61e7ff;
+      --green:#40d98a;
+      --yellow:#ffd54d;
+      --red:#ff5c7c;
+      --shadow:0 18px 50px rgba(0,0,0,.35);
+      --radius:22px;
     }
 
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--text);
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       background:
-        radial-gradient(1000px 500px at 12% -10%, rgba(82,214,255,.14), transparent 60%),
-        radial-gradient(800px 400px at 100% 0%, rgba(142,109,255,.16), transparent 60%),
-        radial-gradient(700px 350px at 50% 100%, rgba(90,140,255,.12), transparent 60%),
+        radial-gradient(1200px 700px at 15% -10%, rgba(62,126,255,.18), transparent 60%),
+        radial-gradient(1000px 700px at 100% 0%, rgba(63,229,255,.13), transparent 55%),
         linear-gradient(135deg, var(--bg-1), var(--bg-2));
-      overflow: hidden;
+      overflow:hidden;
     }
 
-    .scanlines,
-    .grid {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .grid {
+    .grid-overlay{
+      position:fixed; inset:0; pointer-events:none;
       background-image:
         linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-      background-size: 48px 48px;
-      mask-image: radial-gradient(circle at center, black 50%, transparent 95%);
-      opacity: .28;
+      background-size: 28px 28px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.45), rgba(0,0,0,.08));
     }
 
-    .scanlines {
-      background: repeating-linear-gradient(
-        to bottom,
-        rgba(255,255,255,.015),
-        rgba(255,255,255,.015) 1px,
-        transparent 2px,
-        transparent 4px
-      );
-      opacity: .28;
+    .shell{
+      height:100%;
+      display:grid;
+      grid-template-rows: 88px 1fr;
+      padding:18px;
+      gap:16px;
     }
 
-    .shell {
-      position: relative;
-      z-index: 1;
-      height: 100%;
-      padding: 22px;
-      display: grid;
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:16px 22px;
+      border:1px solid var(--line);
+      border-radius:26px;
+      background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
+      backdrop-filter: blur(18px);
+      box-shadow:var(--shadow);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      min-width:0;
+    }
+
+    .brand-mark{
+      width:44px;height:44px;border-radius:14px;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,.28), transparent 45%),
+        linear-gradient(135deg, rgba(98,183,255,.9), rgba(86,239,255,.55));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 0 24px rgba(89,197,255,.35);
+      position:relative;
+    }
+    .brand-mark:after{
+      content:"";
+      position:absolute; inset:10px;
+      border:1px solid rgba(255,255,255,.42);
+      border-radius:10px;
+    }
+
+    .brand h1{
+      margin:0;
+      font-size:26px;
+      line-height:1;
+      letter-spacing:.04em;
+      font-weight:800;
+      text-transform:uppercase;
+    }
+    .brand p{
+      margin:4px 0 0;
+      color:var(--muted);
+      font-size:12px;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+
+    .status-strip{
+      display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; align-items:center;
+    }
+
+    .pill{
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:10px 14px;
+      background:rgba(255,255,255,.04);
+      color:var(--muted);
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+    .pill strong{color:var(--text); font-weight:700}
+    .pulse-dot{
+      display:inline-block; width:9px; height:9px; border-radius:50%;
+      background:var(--green); margin-right:8px;
+      box-shadow:0 0 0 rgba(64,217,138,.7);
+      animation:pulse 1.8s infinite;
+      vertical-align:middle;
+    }
+    @keyframes pulse{
+      0%{box-shadow:0 0 0 0 rgba(64,217,138,.6)}
+      70%{box-shadow:0 0 0 12px rgba(64,217,138,0)}
+      100%{box-shadow:0 0 0 0 rgba(64,217,138,0)}
+    }
+
+    .content{
+      min-height:0;
+      display:grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap:16px;
+    }
+
+    .left-col, .right-col{
+      min-height:0;
+      display:grid;
+      gap:16px;
+    }
+    .left-col{
       grid-template-rows: auto auto 1fr;
-      gap: 18px;
+    }
+    .right-col{
+      grid-template-rows: auto auto 1fr;
     }
 
-    .topbar,
-    .panel,
-    .metric,
-    .machine-card,
-    .ticker,
-    .footer-chip {
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap:16px;
+    }
+
+    .card, .panel{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
       backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      background: var(--panel);
-      border: 1px solid var(--line);
-      box-shadow: var(--shadow);
-    }
-
-    .topbar {
-      border-radius: 28px;
-      padding: 18px 22px;
-      display: grid;
-      grid-template-columns: 1.4fr 1fr auto;
-      align-items: center;
-      gap: 18px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .topbar::before {
-      content: "";
-      position: absolute;
-      inset: -1px;
-      background: linear-gradient(90deg, rgba(82,214,255,.14), transparent 25%, transparent 75%, rgba(142,109,255,.14));
-      pointer-events: none;
-      border-radius: inherit;
-    }
-
-    .brand {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .eyebrow {
-      color: var(--cyan);
-      text-transform: uppercase;
-      letter-spacing: .24em;
-      font-size: 11px;
-      font-weight: 700;
-    }
-
-    .title {
-      font-size: clamp(28px, 3.2vw, 46px);
-      line-height: .95;
-      font-weight: 900;
-      letter-spacing: -.04em;
-      text-transform: uppercase;
-      text-shadow: 0 0 25px rgba(82,214,255,.14);
-    }
-
-    .subtitle {
-      color: var(--muted);
-      font-size: 13px;
-      letter-spacing: .08em;
-      text-transform: uppercase;
-    }
-
-    .live-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 12px;
-      padding: 12px 16px;
-      border-radius: 18px;
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.06);
-    }
-
-    .live-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 999px;
-      background: var(--green);
-      box-shadow: 0 0 18px rgba(55,227,138,.65);
-      animation: pulse 1.8s infinite;
-    }
-
-    .top-meta {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 6px;
-      min-width: 180px;
-    }
-
-    .meta-main {
-      font-size: 14px;
-      font-weight: 700;
-      color: var(--text);
-      text-align: right;
-    }
-
-    .meta-sub {
-      font-size: 12px;
-      color: var(--muted);
-      text-align: right;
-    }
-
-    .status-banner {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      border-radius: 999px;
-      padding: 12px 16px;
-      background: linear-gradient(90deg, rgba(82,214,255,.14), rgba(142,109,255,.12));
-      border: 1px solid rgba(82,214,255,.18);
-      color: #f2f8ff;
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .14em;
-      white-space: nowrap;
-      box-shadow: var(--glow-cyan);
-    }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 16px;
-    }
-
-    .metric {
-      position: relative;
-      overflow: hidden;
-      border-radius: var(--radius);
-      padding: 18px 18px 16px;
-      min-height: 142px;
-    }
-
-    .metric::after {
-      content: "";
-      position: absolute;
-      top: -30%;
-      right: -10%;
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,.18), transparent 65%);
-      opacity: .25;
-      pointer-events: none;
-    }
-
-    .metric-label {
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .18em;
-      color: var(--muted);
-      margin-bottom: 12px;
-    }
-
-    .metric-value {
-      font-size: clamp(34px, 4vw, 56px);
-      line-height: .9;
-      font-weight: 900;
-      letter-spacing: -.06em;
-      margin-bottom: 10px;
-    }
-
-    .metric-foot {
-      font-size: 12px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .1em;
-    }
-
-    .metric.total .metric-value { color: var(--cyan); text-shadow: 0 0 20px rgba(82,214,255,.25); }
-    .metric.critical { box-shadow: var(--shadow), var(--glow-red); }
-    .metric.critical .metric-value { color: var(--red); }
-    .metric.orders { box-shadow: var(--shadow), var(--glow-yellow); }
-    .metric.orders .metric-value { color: var(--yellow); }
-    .metric.buy .metric-value { color: var(--violet); }
-    .metric.health .metric-value { color: var(--green); }
-
-    .main {
-      display: grid;
-      grid-template-columns: 1.55fr .95fr;
-      gap: 18px;
-      min-height: 0;
-    }
-
-    .panel {
-      border-radius: 28px;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .panel-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 18px 20px 14px;
-      border-bottom: 1px solid var(--line);
-      background: linear-gradient(180deg, rgba(255,255,255,.035), transparent);
-    }
-
-    .panel-title {
-      font-size: 14px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .18em;
-      color: var(--text);
-    }
-
-    .panel-sub {
-      color: var(--muted);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-    }
-
-    .table-wrap {
-      padding: 6px 14px 14px;
-      flex: 1;
-      min-height: 0;
-      overflow: auto;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0 10px;
-    }
-
-    thead th {
-      position: sticky;
-      top: 0;
-      z-index: 2;
-      background: rgba(6, 14, 29, .92);
-      color: var(--muted);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .14em;
-      text-align: left;
-      padding: 12px 14px;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-    }
-
-    tbody tr {
-      background: rgba(255,255,255,.035);
-      transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
-    }
-
-    tbody tr:hover {
-      transform: translateY(-1px);
-      background: rgba(255,255,255,.055);
-      box-shadow: 0 8px 20px rgba(0,0,0,.16);
-    }
-
-    tbody td {
-      padding: 14px;
-      font-size: 14px;
-      border-top: 1px solid rgba(255,255,255,.04);
-      border-bottom: 1px solid rgba(255,255,255,.04);
-    }
-
-    tbody tr td:first-child {
-      border-left: 1px solid rgba(255,255,255,.04);
-      border-top-left-radius: 16px;
-      border-bottom-left-radius: 16px;
-    }
-
-    tbody tr td:last-child {
-      border-right: 1px solid rgba(255,255,255,.04);
-      border-top-right-radius: 16px;
-      border-bottom-right-radius: 16px;
-    }
-
-    .machine {
-      font-weight: 800;
-      letter-spacing: -.02em;
-    }
-
-    .item {
-      color: #c7d6f5;
-      font-weight: 600;
-    }
-
-    .status {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 11px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .14em;
-      border: 1px solid transparent;
-      white-space: nowrap;
-    }
-
-    .status::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: currentColor;
-      box-shadow: 0 0 12px currentColor;
-    }
-
-    .status-critical {
-      color: var(--red);
-      background: rgba(255,95,123,.12);
-      border-color: rgba(255,95,123,.24);
-      box-shadow: var(--glow-red);
-      animation: dangerPulse 1.7s infinite;
-    }
-
-    .status-order {
-      color: var(--yellow);
-      background: rgba(255,212,82,.12);
-      border-color: rgba(255,212,82,.22);
-      box-shadow: var(--glow-yellow);
-    }
-
-    .status-ok {
-      color: var(--green);
-      background: rgba(55,227,138,.12);
-      border-color: rgba(55,227,138,.22);
-    }
-
-    .num {
-      font-variant-numeric: tabular-nums;
-      font-weight: 800;
-    }
-
-    .days-danger { color: var(--red); }
-    .days-warning { color: var(--yellow); }
-    .days-safe { color: var(--green); }
-
-    .side {
-      display: grid;
-      grid-template-rows: auto auto auto 1fr;
-      gap: 18px;
-      min-height: 0;
-    }
-
-    .queue-rail {
-      padding: 14px;
-      display: grid;
-      gap: 10px;
-      overflow: auto;
-    }
-
-    .queue-item {
-      border-radius: 20px;
-      border: 1px solid rgba(255,255,255,.07);
-      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
-      padding: 14px;
-      display: grid;
-      gap: 10px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .queue-item::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      background: linear-gradient(180deg, var(--cyan), var(--violet));
-      opacity: .8;
-    }
-
-    .queue-item.critical::before { background: linear-gradient(180deg, #ff7b95, #ff5f7b); }
-    .queue-item.order::before { background: linear-gradient(180deg, #ffe07e, #ffd452); }
-
-    .queue-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .queue-rank {
-      width: 34px;
-      height: 34px;
-      border-radius: 12px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 13px;
-      font-weight: 900;
-      color: var(--text);
-      background: rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.08);
-      flex: 0 0 auto;
-    }
-
-    .queue-main {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .queue-machine {
-      font-size: 15px;
-      font-weight: 900;
-      letter-spacing: -.02em;
-      margin-bottom: 4px;
-    }
-
-    .queue-item-name {
-      font-size: 12px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .1em;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .queue-metrics {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-    }
-
-    .queue-chip {
-      border-radius: 14px;
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.06);
-      padding: 10px 11px;
-    }
-
-    .queue-chip-label {
-      color: var(--muted);
-      font-size: 10px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .14em;
-      margin-bottom: 6px;
-    }
-
-    .queue-chip-value {
-      font-size: 15px;
-      font-weight: 900;
-      letter-spacing: -.03em;
-    }
-
-    .ticker {
-      border-radius: 24px;
-      padding: 16px 18px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .ticker::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, rgba(255,95,123,.08), rgba(255,212,82,.06), rgba(82,214,255,.08));
-      pointer-events: none;
-    }
-
-    .ticker-label {
-      position: relative;
-      z-index: 1;
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .16em;
-      margin-bottom: 8px;
-    }
-
-    .ticker-text {
-      position: relative;
-      z-index: 1;
-      font-size: 15px;
-      font-weight: 800;
-      letter-spacing: .01em;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .stack {
-      display: grid;
-      gap: 14px;
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .machine-card {
-      border-radius: 22px;
-      padding: 16px;
-      background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.03));
-      min-height: 130px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .machine-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .machine-name {
-      font-size: 16px;
-      font-weight: 900;
-      letter-spacing: -.03em;
-    }
-
-    .machine-sub {
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: .12em;
-    }
-
-    .machine-usage {
-      font-size: 34px;
-      font-weight: 900;
-      letter-spacing: -.06em;
-      color: var(--cyan);
-      text-shadow: 0 0 18px rgba(82,214,255,.18);
-      line-height: .9;
-    }
-
-    .machine-usage small {
-      font-size: 11px;
-      color: var(--muted);
-      letter-spacing: .1em;
-      text-transform: uppercase;
-      display: block;
-      margin-top: 7px;
-    }
-
-    .mini-bar {
-      margin-top: 12px;
-      height: 8px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.05);
-      overflow: hidden;
-    }
-
-    .mini-bar > span {
-      display: block;
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, var(--cyan), var(--blue), var(--violet));
-      box-shadow: 0 0 18px rgba(82,214,255,.25);
-      width: 0;
-      transition: width .6s ease;
-    }
-
-    .feed {
-      padding: 14px;
-      display: grid;
-      gap: 10px;
-      overflow: auto;
-    }
-
-    .feed-item {
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,.06);
-      background: rgba(255,255,255,.035);
-      padding: 14px 14px 13px;
-      display: grid;
-      gap: 8px;
-    }
-
-    .feed-line1 {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      font-weight: 800;
-    }
-
-    .feed-line2 {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
-    .footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .footer-chips {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .footer-chip {
-      border-radius: 999px;
-      padding: 10px 14px;
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: .14em;
-      color: var(--muted);
-    }
-
-    .error {
-      color: #ffd3dd;
-      background: rgba(255,95,123,.12);
-      border: 1px solid rgba(255,95,123,.18);
-      padding: 12px 14px;
-      border-radius: 16px;
-      font-size: 13px;
-      margin: 14px;
-    }
-
-    .muted { color: var(--muted); }
-    .empty { color: var(--muted); padding: 18px; font-size: 13px; }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.22); opacity: .75; }
-    }
-
-    @keyframes dangerPulse {
-      0%,100% { box-shadow: 0 0 16px rgba(255,95,123,.14); }
-      50% { box-shadow: 0 0 28px rgba(255,95,123,.32); }
-    }
-
-    @media (max-width: 1280px) {
-      .metrics { grid-template-columns: repeat(3, 1fr); }
-      .main { grid-template-columns: 1fr; }
-      body { overflow: auto; }
-      .shell { height: auto; min-height: 100%; }
+      box-shadow:var(--shadow);
+      border-radius:var(--radius);
+      overflow:hidden;
+      min-height:0;
+    }
+
+    .metric{
+      padding:18px 18px 16px;
+      position:relative;
+    }
+    .metric .label{
+      color:var(--muted);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:8px;
+    }
+    .metric .value{
+      font-size:42px;
+      line-height:1;
+      font-weight:800;
+      letter-spacing:-.03em;
+    }
+    .metric .sub{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .metric.blue:before,
+    .metric.red:before,
+    .metric.yellow:before,
+    .metric.green:before{
+      content:"";
+      position:absolute; inset:auto -30px -30px auto;
+      width:130px; height:130px; border-radius:50%;
+      filter:blur(16px); opacity:.22;
+    }
+    .metric.blue:before{ background:var(--blue); }
+    .metric.red:before{ background:var(--red); }
+    .metric.yellow:before{ background:var(--yellow); }
+    .metric.green:before{ background:var(--green); }
+
+    .panel-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:16px 18px 12px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+    }
+    .panel-title{
+      margin:0;
+      font-size:15px;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+    .panel-sub{
+      color:var(--muted);
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .panel-body{
+      padding:14px 16px 16px;
+      min-height:0;
+      overflow:auto;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:14px;
+    }
+    thead th{
+      position:sticky; top:0;
+      background:rgba(9,19,33,.95);
+      color:var(--muted);
+      text-align:left;
+      padding:12px 10px;
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      border-bottom:1px solid rgba(255,255,255,.1);
+    }
+    tbody td{
+      padding:12px 10px;
+      border-bottom:1px solid rgba(255,255,255,.06);
+      vertical-align:middle;
+    }
+    tbody tr:hover{ background:rgba(255,255,255,.03); }
+
+    .badge{
+      display:inline-flex; align-items:center; justify-content:center;
+      min-width:84px;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      border:1px solid transparent;
+    }
+    .status-ok{ color:#0f2f1f; background:rgba(64,217,138,.92); }
+    .status-order{ color:#392b00; background:rgba(255,213,77,.95); }
+    .status-critical{ color:#3d0012; background:rgba(255,92,124,.95); box-shadow:0 0 22px rgba(255,92,124,.18); }
+
+    .queue{
+      display:grid;
+      gap:12px;
+    }
+
+    .queue-item{
+      display:grid;
+      grid-template-columns: 70px 1fr auto;
+      gap:14px;
+      align-items:center;
+      padding:14px;
+      border-radius:18px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .queue-rank{
+      width:56px; height:56px; border-radius:16px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:24px; font-weight:900;
+      background:linear-gradient(135deg, rgba(106,184,255,.35), rgba(97,231,255,.18));
+      border:1px solid rgba(255,255,255,.12);
+      color:white;
+    }
+    .queue-main{
+      min-width:0;
+    }
+    .queue-title{
+      font-size:18px;
+      font-weight:800;
+      letter-spacing:.01em;
+      margin-bottom:4px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .queue-meta{
+      display:flex; flex-wrap:wrap; gap:8px 12px;
+      color:var(--muted);
+      font-size:13px;
+    }
+    .queue-right{
+      text-align:right;
+      min-width:160px;
+    }
+    .days{
+      font-size:34px;
+      line-height:1;
+      font-weight:900;
+      letter-spacing:-.03em;
+    }
+    .days.red{ color:var(--red); }
+    .days.yellow{ color:var(--yellow); }
+    .days.green{ color:var(--green); }
+    .mini{
+      color:var(--muted);
+      font-size:12px;
+      text-transform:uppercase;
+      letter-spacing:.10em;
+      margin-top:6px;
+    }
+
+    .feed{
+      display:grid;
+      gap:10px;
+    }
+    .feed-row{
+      display:flex; gap:12px; align-items:flex-start;
+      padding:12px 0;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .feed-dot{
+      width:10px; height:10px; border-radius:50%; margin-top:5px;
+      background:var(--blue);
+      box-shadow:0 0 0 7px rgba(106,184,255,.1);
+      flex:0 0 auto;
+    }
+    .feed-copy strong{ display:block; font-size:14px; margin-bottom:3px; }
+    .feed-copy span{ color:var(--muted); font-size:13px; }
+
+    .empty{
+      display:grid; place-items:center;
+      min-height:180px;
+      color:var(--muted);
+      border:1px dashed rgba(255,255,255,.12);
+      border-radius:18px;
+      background:rgba(255,255,255,.03);
+      text-align:center;
+      padding:18px;
+    }
+
+    .ticker{
+      position:fixed;
+      left:18px; right:18px; bottom:18px;
+      height:54px;
+      display:flex;
+      align-items:center;
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
+      backdrop-filter: blur(16px);
+      box-shadow:var(--shadow);
+    }
+    .ticker-label{
+      padding:0 16px;
+      height:100%;
+      display:flex; align-items:center;
+      background:linear-gradient(135deg, rgba(255,92,124,.9), rgba(255,138,102,.85));
+      color:#fff;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      flex:0 0 auto;
+    }
+    .ticker-track{
+      white-space:nowrap;
+      display:inline-block;
+      padding-left:100%;
+      animation: ticker 28s linear infinite;
+      color:#dce8ff;
+      font-size:14px;
+      letter-spacing:.03em;
+    }
+    @keyframes ticker{
+      0%{ transform:translateX(0); }
+      100%{ transform:translateX(-100%); }
+    }
+
+    .small{
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    @media (max-width: 1400px){
+      .content{ grid-template-columns:1fr; }
+      .cards{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+      body{ overflow:auto; }
+      .ticker{ position:static; margin:0 18px 18px; }
+      .shell{ grid-template-rows:88px auto; padding-bottom:18px; }
     }
   </style>
 </head>
 <body>
-  <div class="grid"></div>
-  <div class="scanlines"></div>
+  <div class="grid-overlay"></div>
 
   <div class="shell">
-    <section class="topbar">
+    <div class="topbar">
       <div class="brand">
-        <div class="eyebrow">Live Operations Dashboard</div>
-        <div class="title">Crane Control Room</div>
-        <div class="subtitle">Google Sheets live feed • TV dashboard • auto-refresh enabled</div>
-      </div>
-
-      <div class="live-wrap">
-        <span class="live-dot"></span>
+        <div class="brand-mark"></div>
         <div>
-          <div class="eyebrow" style="margin-bottom:4px; color: var(--green); letter-spacing:.18em;">Live Feed</div>
-          <div style="font-weight:800; font-size:14px;">CSV pull from published TV Dashboard tab</div>
+          <h1>Crane Control Room</h1>
+          <p>Live Inventory & Runout Operations</p>
         </div>
       </div>
+      <div class="status-strip">
+        <div class="pill"><span class="pulse-dot"></span><strong id="syncState">Live</strong></div>
+        <div class="pill">Last Sync: <strong id="lastSync">--</strong></div>
+        <div class="pill">Source: <strong>Published Google Sheet CSV</strong></div>
+        <div class="pill">Refresh: <strong>30s</strong></div>
+      </div>
+    </div>
 
-      <div class="top-meta">
-        <div class="status-banner" id="systemStatus">Awaiting feed</div>
-        <div class="meta-main" id="clock">--:--:--</div>
-        <div class="meta-sub" id="lastUpdated">Last sync: --</div>
-      </div>
-    </section>
-
-    <section class="metrics">
-      <div class="metric total">
-        <div class="metric-label">Total SKUs</div>
-        <div class="metric-value" id="totalSkus">--</div>
-        <div class="metric-foot">Tracked across inventory engine</div>
-      </div>
-      <div class="metric critical">
-        <div class="metric-label">Critical Items</div>
-        <div class="metric-value" id="criticalCount">--</div>
-        <div class="metric-foot">Immediate action recommended</div>
-      </div>
-      <div class="metric orders">
-        <div class="metric-label">Orders Needed</div>
-        <div class="metric-value" id="ordersNeeded">--</div>
-        <div class="metric-foot">Within reorder threshold</div>
-      </div>
-      <div class="metric buy">
-        <div class="metric-label">Units To Buy</div>
-        <div class="metric-value" id="unitsToBuy">--</div>
-        <div class="metric-foot">Current recommended order qty</div>
-      </div>
-      <div class="metric health">
-        <div class="metric-label">System Health</div>
-        <div class="metric-value" id="systemHealth">--</div>
-        <div class="metric-foot">Based on critical and order load</div>
-      </div>
-    </section>
-
-    <section class="main">
-      <div class="panel">
-        <div class="panel-head">
-          <div>
-            <div class="panel-title">Priority Inventory Queue</div>
-            <div class="panel-sub">Critical items, order-needed items, and runout visibility</div>
+    <div class="content">
+      <div class="left-col">
+        <div class="cards">
+          <div class="card metric blue">
+            <div class="label">Total SKUs</div>
+            <div class="value" id="metricTotal">--</div>
+            <div class="sub">Inventory lines tracked</div>
           </div>
-          <div class="panel-sub" id="queueSummary">No records loaded</div>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Machine</th>
-                <th>Item</th>
-                <th>On Hand</th>
-                <th>Status</th>
-                <th>Order Qty</th>
-                <th>Days Left</th>
-                <th>Runout Date</th>
-                <th>Order By</th>
-              </tr>
-            </thead>
-            <tbody id="priorityTableBody"></tbody>
-          </table>
-          <div class="empty" id="priorityEmpty">Connecting to control feed…</div>
-          <div class="error" id="priorityError" style="display:none;"></div>
-        </div>
-      </div>
-
-      <div class="side">
-        <div class="ticker">
-          <div class="ticker-label">Operations Callout</div>
-          <div class="ticker-text" id="tickerText">Waiting on initial CSV pull.</div>
+          <div class="card metric red">
+            <div class="label">Critical Count</div>
+            <div class="value" id="metricCritical">--</div>
+            <div class="sub">Immediate action items</div>
+          </div>
+          <div class="card metric yellow">
+            <div class="label">Orders Needed</div>
+            <div class="value" id="metricOrders">--</div>
+            <div class="sub">Items below reorder threshold</div>
+          </div>
+          <div class="card metric green">
+            <div class="label">Next Runout</div>
+            <div class="value" id="metricNextRunout">--</div>
+            <div class="sub" id="metricNextRunoutSub">Awaiting data</div>
+          </div>
         </div>
 
         <div class="panel">
           <div class="panel-head">
             <div>
-              <div class="panel-title">Order Soonest to Latest</div>
-              <div class="panel-sub">Sorted by days left and runout pressure</div>
+              <h3 class="panel-title">Order Soonest to Latest</h3>
+              <div class="panel-sub">Live priority rail from Days Left Filter</div>
             </div>
-            <div class="panel-sub" id="runoutSummary">Waiting on live feed</div>
+            <div class="small" id="priorityCount">0 items</div>
           </div>
-          <div class="queue-rail" id="runoutRail"></div>
-          <div class="empty" id="runoutEmpty" style="display:none; padding:14px;">No runout queue data yet.</div>
-        </div>
-
-        <div class="panel" style="padding:16px; gap:14px;">
-          <div>
-            <div class="panel-title">Machine Snapshot</div>
-            <div class="panel-sub">Highest priority machines shown first</div>
+          <div class="panel-body">
+            <div id="priorityQueue" class="queue"></div>
           </div>
-          <div class="stack" id="machineCards"></div>
-          <div class="empty" id="machineEmpty" style="padding:0; display:none;">No machine records available yet.</div>
         </div>
 
         <div class="panel">
           <div class="panel-head">
             <div>
-              <div class="panel-title">Action Feed</div>
-              <div class="panel-sub">Auto-generated from current inventory state</div>
+              <h3 class="panel-title">Priority Inventory Table</h3>
+              <div class="panel-sub">Critical, order, and near-runout visibility</div>
             </div>
           </div>
-          <div class="feed" id="actionFeed"></div>
+          <div class="panel-body">
+            <table>
+              <thead>
+                <tr>
+                  <th>Machine</th>
+                  <th>Item</th>
+                  <th>On Hand</th>
+                  <th>Status</th>
+                  <th>Order Qty</th>
+                  <th>Days Left</th>
+                  <th>Runout Date</th>
+                </tr>
+              </thead>
+              <tbody id="priorityTableBody"></tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </section>
 
-    <section class="footer">
-      <div class="footer-chips">
-        <div class="footer-chip">Source: Published Google Sheets CSV</div>
-        <div class="footer-chip">Refresh: Every 30 seconds</div>
-        <div class="footer-chip">Tab: TV Dashboard</div>
+      <div class="right-col">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">Runout Feed</h3>
+              <div class="panel-sub">What needs attention first</div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <div id="actionFeed" class="feed"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">Critical Items Block</h3>
+              <div class="panel-sub">Directly mirrored from TV Dashboard section</div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <table>
+              <thead>
+                <tr>
+                  <th>Machine</th>
+                  <th>Item</th>
+                  <th>On Hand</th>
+                  <th>Status</th>
+                  <th>Order Qty</th>
+                  <th>Days Left</th>
+                  <th>Runout Date</th>
+                </tr>
+              </thead>
+              <tbody id="criticalTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h3 class="panel-title">Needs Ordering Block</h3>
+              <div class="panel-sub">Only shows valid rows; ignores #N/A</div>
+            </div>
+          </div>
+          <div class="panel-body">
+            <table>
+              <thead>
+                <tr>
+                  <th>Machine</th>
+                  <th>Item</th>
+                  <th>On Hand</th>
+                  <th>Status</th>
+                  <th>Order Qty</th>
+                  <th>Days Left</th>
+                  <th>Runout Date</th>
+                </tr>
+              </thead>
+              <tbody id="orderTableBody"></tbody>
+            </table>
+          </div>
+        </div>
       </div>
-      <div class="footer-chip" id="footerState">Feed idle</div>
-    </section>
+    </div>
+  </div>
+
+  <div class="ticker">
+    <div class="ticker-label">Ops Ticker</div>
+    <div class="ticker-track" id="tickerTrack">Loading live inventory feed…</div>
   </div>
 
   <script>
-    const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQu7HMKSw3Slo20XCcxff99jLjqKM955_AvMMyxLBvnRsgISC_SZo2niEpDv9jqwpMm7SGfAKfQW2S6/pub?gid=2026192315&single=true&output=csv";
-    const REFRESH_MS = 30000;
-
-    const els = {
-      totalSkus: document.getElementById('totalSkus'),
-      criticalCount: document.getElementById('criticalCount'),
-      ordersNeeded: document.getElementById('ordersNeeded'),
-      unitsToBuy: document.getElementById('unitsToBuy'),
-      systemHealth: document.getElementById('systemHealth'),
-      queueSummary: document.getElementById('queueSummary'),
-      priorityBody: document.getElementById('priorityTableBody'),
-      priorityEmpty: document.getElementById('priorityEmpty'),
-      priorityError: document.getElementById('priorityError'),
-      machineCards: document.getElementById('machineCards'),
-      machineEmpty: document.getElementById('machineEmpty'),
-      runoutRail: document.getElementById('runoutRail'),
-      runoutSummary: document.getElementById('runoutSummary'),
-      runoutEmpty: document.getElementById('runoutEmpty'),
-      actionFeed: document.getElementById('actionFeed'),
-      tickerText: document.getElementById('tickerText'),
-      clock: document.getElementById('clock'),
-      lastUpdated: document.getElementById('lastUpdated'),
-      systemStatus: document.getElementById('systemStatus'),
-      footerState: document.getElementById('footerState'),
+    const CONFIG = {
+      csvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQu7HMKSw3Slo20XCcxff99jLjqKM955_AvMMyxLBvnRsgISC_SZo2niEpDv9jqwpMm7SGfAKfQW2S6/pub?gid=2026192315&single=true&output=csv",
+      refreshMs: 30000
     };
 
-    function setClock() {
-      const now = new Date();
-      els.clock.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    }
-    setClock();
-    setInterval(setClock, 1000);
-
-    function parseCSV(text) {
+    function parseCSV(text){
       const rows = [];
       let row = [];
-      let cell = '';
+      let cell = "";
       let inQuotes = false;
 
-      for (let i = 0; i < text.length; i++) {
+      for(let i = 0; i < text.length; i++){
         const ch = text[i];
         const next = text[i + 1];
 
-        if (ch === '"') {
-          if (inQuotes && next === '"') {
+        if(ch === '"'){
+          if(inQuotes && next === '"'){
             cell += '"';
             i++;
           } else {
             inQuotes = !inQuotes;
           }
-        } else if (ch === ',' && !inQuotes) {
+        } else if(ch === ',' && !inQuotes){
           row.push(cell);
-          cell = '';
-        } else if ((ch === '\n' || ch === '\r') && !inQuotes) {
-          if (ch === '\r' && next === '\n') i++;
+          cell = "";
+        } else if((ch === '\n' || ch === '\r') && !inQuotes){
+          if(ch === '\r' && next === '\n'){ i++; }
           row.push(cell);
           rows.push(row);
           row = [];
-          cell = '';
+          cell = "";
         } else {
           cell += ch;
         }
       }
 
-      if (cell.length || row.length) {
+      if(cell.length || row.length){
         row.push(cell);
         rows.push(row);
       }
-      return rows;
+
+      return rows.map(r => r.map(c => (c || "").trim()));
     }
 
-    function clean(value) {
-      return String(value ?? '').replace(/^\s+|\s+$/g, '');
+    function escapeHtml(value){
+      return String(value ?? "").replace(/[&<>"']/g, s => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+      }[s]));
     }
 
-    function toNumber(value) {
-      if (value === null || value === undefined) return 0;
-      const cleaned = String(value).replace(/[$,%\s]/g, '').replace(/,/g, '');
-      const num = parseFloat(cleaned);
-      return Number.isFinite(num) ? num : 0;
+    function safeNumber(value){
+      const num = parseFloat(String(value).replace(/[^0-9.\-]/g, ""));
+      return Number.isFinite(num) ? num : null;
     }
 
-    function esc(str) {
-      return String(str ?? '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
-
-    function getStatusClass(status) {
-      const s = clean(status).toUpperCase();
-      if (s === 'CRITICAL') return 'status status-critical';
-      if (s === 'ORDER') return 'status status-order';
-      return 'status status-ok';
-    }
-
-    function formatDate(value) {
-      const raw = clean(value);
-      if (!raw) return '—';
-      const d = new Date(raw);
-      if (!Number.isNaN(d.getTime())) {
-        return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    function findCell(rows, label){
+      const lower = label.toLowerCase();
+      for(let r = 0; r < rows.length; r++){
+        for(let c = 0; c < rows[r].length; c++){
+          if((rows[r][c] || "").toLowerCase() === lower){
+            return { row: r, col: c };
+          }
+        }
       }
-      return raw;
+      return null;
     }
 
-    function dayClass(days) {
-      const n = toNumber(days);
-      if (n <= 3) return 'days-danger';
-      if (n <= 7) return 'days-warning';
-      return 'days-safe';
+    function rowNonEmptyCount(row, start = 0){
+      return row.slice(start).filter(v => String(v || "").trim() !== "").length;
     }
 
-    function extractSections(rows) {
-      const headers = rows[0] || [];
-      const sections = {
-        critical: [],
-        ordering: [],
-        runningSoon: [],
-        metrics: { totalSkus: 0, criticalCount: 0, ordersNeeded: 0 }
-      };
+    function isHeaderLike(cells){
+      const joined = cells.join(" ").toLowerCase();
+      return joined.includes("machine") || joined.includes("item") || joined.includes("days left") || joined.includes("runout");
+    }
 
-      for (let i = 1; i < rows.length; i++) {
-        const row = rows[i];
-        const first = clean(row[0]);
-        const metricName = clean(row[18]);
-        const metricValue = clean(row[19]);
+    function normalizeStatus(v){
+      const s = String(v || "").trim().toUpperCase();
+      if(s === "CRITICAL" || s === "ORDER" || s === "OK") return s;
+      return "";
+    }
 
-        if (metricName === 'Total SKUs') sections.metrics.totalSkus = toNumber(metricValue);
-        if (metricName === 'Critical Count') sections.metrics.criticalCount = toNumber(metricValue);
-        if (metricName === 'Orders Needed') sections.metrics.ordersNeeded = toNumber(metricValue);
+    function statusBadge(status){
+      const cls = status === "CRITICAL" ? "status-critical" : status === "ORDER" ? "status-order" : "status-ok";
+      return `<span class="badge ${cls}">${escapeHtml(status || "OK")}</span>`;
+    }
 
-        if (!first || first === '#N/A') continue;
-        if (first.startsWith('Critical Items') || first.startsWith('Needs Ordering') || first.startsWith('Running Out Soon')) continue;
+    function readSectionRows(rows, label, maxRows = 12){
+      const pos = findCell(rows, label);
+      if(!pos) return [];
+      const out = [];
+      for(let r = pos.row + 1; r < Math.min(rows.length, pos.row + 1 + maxRows); r++){
+        const row = rows[r] || [];
+        const slice = row.slice(pos.col, pos.col + 16).map(v => String(v || "").trim());
+        if(slice.every(v => !v)) break;
+        if(slice[0] === "#N/A") continue;
+        if(isHeaderLike(slice)) continue;
+        if(rowNonEmptyCount(slice) < 2) continue;
+        out.push(slice);
+      }
+      return out;
+    }
 
-        const record = {
-          machine: clean(row[0]),
-          item: clean(row[1]),
-          onHand: toNumber(row[2]),
-          onOrder: toNumber(row[3]),
-          status: clean(row[12]).toUpperCase() || 'OK',
-          orderQty: toNumber(row[13]),
-          daysLeft: clean(row[14]),
-          runoutDate: clean(row[15]),
-          orderByDate: clean(row[16]),
-        };
+    function extractSummary(rows){
+      const pos = findCell(rows, "Summary Metrics");
+      const summary = { total: null, critical: null, orders: null };
+      if(!pos) return summary;
 
-        if (!record.machine) continue;
+      for(let r = pos.row + 1; r < Math.min(rows.length, pos.row + 8); r++){
+        const label = (rows[r]?.[pos.col] || "").toLowerCase();
+        const value = rows[r]?.[pos.col + 1] || "";
+        if(label.includes("total skus")) summary.total = safeNumber(value);
+        if(label.includes("critical count")) summary.critical = safeNumber(value);
+        if(label.includes("orders needed")) summary.orders = safeNumber(value);
+      }
+      return summary;
+    }
 
-        const isCriticalSection = i >= 1 && i < 13;
-        const isOrderingSection = i >= 13 && i < 18;
-        const isRunningSection = i >= 18;
+    function extractBlockRows(rows, label){
+      const raw = readSectionRows(rows, label, 12);
+      return raw.map(cells => {
+        const machine = cells[0] || "";
+        const item = cells[1] || "";
+        const onHand = cells[2] || "";
+        const status = normalizeStatus(cells[12] || cells[4] || "");
+        const orderQty = cells[13] || cells[5] || "";
+        const daysLeft = safeNumber(cells[14] || cells[2]);
+        const runoutDate = cells[15] || cells[3] || "";
+        return { machine, item, onHand, status, orderQty, daysLeft, runoutDate };
+      }).filter(x => x.machine || x.item);
+    }
 
-        if (isCriticalSection) sections.critical.push(record);
-        else if (isOrderingSection) sections.ordering.push(record);
-        else if (isRunningSection) sections.runningSoon.push(record);
+    function extractDaysLeftFilter(rows){
+      const pos = findCell(rows, "Days Left Filter");
+      if(!pos) return [];
+
+      const out = [];
+      for(let r = pos.row + 1; r < Math.min(rows.length, pos.row + 25); r++){
+        const row = rows[r] || [];
+        const cells = row.slice(pos.col, pos.col + 8).map(v => String(v || "").trim());
+        if(cells.every(v => !v)) break;
+        if(cells[0] === "#N/A") continue;
+        if(isHeaderLike(cells)) continue;
+        if(rowNonEmptyCount(cells) < 3) continue;
+
+        // Supports either:
+        // machine, item, daysLeft, runoutDate, status, orderQty?
+        // or machine, item, daysLeft, runoutDate, status
+        const machine = cells[0] || "";
+        const item = cells[1] || "";
+        const daysLeft = safeNumber(cells[2]);
+        const runoutDate = cells[3] || "";
+        const status = normalizeStatus(cells[4] || "");
+        const orderQty = cells[5] || "";
+        if(!(machine || item)) continue;
+        out.push({ machine, item, daysLeft, runoutDate, status, orderQty });
       }
 
-      return { headers, sections };
+      out.sort((a,b) => {
+        const da = a.daysLeft ?? 99999;
+        const db = b.daysLeft ?? 99999;
+        return da - db;
+      });
+      return out;
     }
 
-    function buildPriorityList(sections) {
-      const map = new Map();
-      [...sections.critical, ...sections.ordering, ...sections.runningSoon].forEach(item => {
-        const key = `${item.machine}__${item.item}`;
-        if (!map.has(key)) map.set(key, item);
-      });
+    function combinedPriority({daysLeftRows, criticalRows, orderRows}){
+      if(daysLeftRows.length) return daysLeftRows;
 
-      const list = [...map.values()];
-      const rank = { CRITICAL: 0, ORDER: 1, OK: 2 };
-      list.sort((a, b) => {
-        const statusDiff = (rank[a.status] ?? 99) - (rank[b.status] ?? 99);
-        if (statusDiff !== 0) return statusDiff;
-        return toNumber(a.daysLeft) - toNumber(b.daysLeft);
-      });
-      return list;
+      const merged = [...criticalRows, ...orderRows].filter(x => x.machine || x.item);
+      merged.sort((a,b) => (a.daysLeft ?? 99999) - (b.daysLeft ?? 99999));
+      return merged;
     }
 
-    function renderPriority(items) {
-      els.priorityBody.innerHTML = '';
-      if (!items.length) {
-        els.priorityEmpty.style.display = 'block';
+    function renderTableRows(targetId, rows){
+      const body = document.getElementById(targetId);
+      if(!rows.length){
+        body.innerHTML = `<tr><td colspan="7"><div class="empty">No matching rows right now.</div></td></tr>`;
         return;
       }
-      els.priorityEmpty.style.display = 'none';
-
-      items.forEach(item => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td class="machine">${esc(item.machine)}</td>
-          <td class="item">${esc(item.item || '—')}</td>
-          <td class="num">${Math.round(item.onHand)}</td>
-          <td><span class="${getStatusClass(item.status)}">${esc(item.status)}</span></td>
-          <td class="num">${Math.round(item.orderQty)}</td>
-          <td class="num ${dayClass(item.daysLeft)}">${esc(item.daysLeft || '—')}</td>
-          <td>${esc(formatDate(item.runoutDate))}</td>
-          <td>${esc(formatDate(item.orderByDate))}</td>
-        `;
-        els.priorityBody.appendChild(tr);
-      });
+      body.innerHTML = rows.map(row => `
+        <tr>
+          <td>${escapeHtml(row.machine)}</td>
+          <td>${escapeHtml(row.item)}</td>
+          <td>${escapeHtml(row.onHand ?? "")}</td>
+          <td>${statusBadge(row.status || "OK")}</td>
+          <td>${escapeHtml(row.orderQty ?? "")}</td>
+          <td>${escapeHtml(row.daysLeft ?? "")}</td>
+          <td>${escapeHtml(row.runoutDate ?? "")}</td>
+        </tr>
+      `).join("");
     }
 
+    function renderPriorityQueue(rows){
+      const root = document.getElementById("priorityQueue");
+      document.getElementById("priorityCount").textContent = `${rows.length} item${rows.length === 1 ? "" : "s"}`;
 
-    function buildRunoutQueue(items) {
-      return [...items]
-        .filter(i => clean(i.machine))
-        .sort((a, b) => {
-          const aDays = toNumber(a.daysLeft);
-          const bDays = toNumber(b.daysLeft);
-          const aValid = Number.isFinite(aDays) && aDays > 0;
-          const bValid = Number.isFinite(bDays) && bDays > 0;
-          if (aValid && bValid) return aDays - bDays;
-          if (aValid) return -1;
-          if (bValid) return 1;
-          return (toNumber(a.orderQty) * -1) - (toNumber(b.orderQty) * -1);
-        });
-    }
-
-    function renderRunoutQueue(items) {
-      els.runoutRail.innerHTML = '';
-      if (!items.length) {
-        els.runoutEmpty.style.display = 'block';
-        els.runoutSummary.textContent = 'No queue data loaded';
+      if(!rows.length){
+        root.innerHTML = `<div class="empty">No Days Left Filter rows detected yet.<br/>Once the sheet spills values into that block, they will appear here automatically.</div>`;
         return;
       }
-      els.runoutEmpty.style.display = 'none';
-      els.runoutSummary.textContent = `${items.length} item${items.length === 1 ? '' : 's'} in priority order`;
 
-      items.slice(0, 6).forEach((item, index) => {
-        const div = document.createElement('div');
-        const stateClass = item.status === 'CRITICAL' ? 'critical' : (item.status === 'ORDER' ? 'order' : 'ok');
-        const days = clean(item.daysLeft) || '—';
-        div.className = `queue-item ${stateClass}`;
-        div.innerHTML = `
-          <div class="queue-top">
-            <div class="queue-rank">${index + 1}</div>
+      root.innerHTML = rows.slice(0, 8).map((row, idx) => {
+        const days = row.daysLeft;
+        const color = days !== null && days <= 7 ? "red" : days !== null && days <= 14 ? "yellow" : "green";
+        return `
+          <div class="queue-item">
+            <div class="queue-rank">${idx + 1}</div>
             <div class="queue-main">
-              <div class="queue-machine">${esc(item.machine)}</div>
-              <div class="queue-item-name">${esc(item.item || 'Inventory item')}</div>
+              <div class="queue-title">${escapeHtml(row.machine || "Unknown Machine")} <span style="color:var(--muted); font-weight:600;">• ${escapeHtml(row.item || "Item")}</span></div>
+              <div class="queue-meta">
+                <span>${statusBadge(row.status || "OK")}</span>
+                ${row.orderQty ? `<span>Order Qty: <strong style="color:var(--text)">${escapeHtml(row.orderQty)}</strong></span>` : ""}
+                ${row.runoutDate ? `<span>Runout: <strong style="color:var(--text)">${escapeHtml(row.runoutDate)}</strong></span>` : ""}
+              </div>
             </div>
-            <span class="${getStatusClass(item.status)}">${esc(item.status)}</span>
-          </div>
-          <div class="queue-metrics">
-            <div class="queue-chip">
-              <div class="queue-chip-label">Days Left</div>
-              <div class="queue-chip-value ${dayClass(days)}">${esc(days)}</div>
-            </div>
-            <div class="queue-chip">
-              <div class="queue-chip-label">Runout Date</div>
-              <div class="queue-chip-value">${esc(formatDate(item.runoutDate))}</div>
-            </div>
-            <div class="queue-chip">
-              <div class="queue-chip-label">Order Qty</div>
-              <div class="queue-chip-value">${Math.round(toNumber(item.orderQty))}</div>
+            <div class="queue-right">
+              <div class="days ${color}">${days ?? "--"}</div>
+              <div class="mini">Days Left</div>
             </div>
           </div>
         `;
-        els.runoutRail.appendChild(div);
-      });
+      }).join("");
     }
 
-    function renderMachineCards(items) {
-      els.machineCards.innerHTML = '';
-      if (!items.length) {
-        els.machineEmpty.style.display = 'block';
+    function renderFeed(rows){
+      const root = document.getElementById("actionFeed");
+      if(!rows.length){
+        root.innerHTML = `<div class="empty">No runout actions in the feed.</div>`;
         return;
       }
-      els.machineEmpty.style.display = 'none';
-
-      const maxOrder = Math.max(...items.map(i => Math.max(1, toNumber(i.orderQty))), 1);
-      items.slice(0, 4).forEach(item => {
-        const width = Math.min(100, Math.round((toNumber(item.orderQty) / maxOrder) * 100));
-        const div = document.createElement('div');
-        div.className = 'machine-card';
-        div.innerHTML = `
-          <div class="machine-top">
-            <div>
-              <div class="machine-name">${esc(item.machine)}</div>
-              <div class="machine-sub">${esc(item.item || 'Inventory item')}</div>
+      root.innerHTML = rows.slice(0, 8).map(row => {
+        const status = row.status || "OK";
+        const feedColor = status === "CRITICAL" ? "var(--red)" : status === "ORDER" ? "var(--yellow)" : "var(--blue)";
+        return `
+          <div class="feed-row">
+            <div class="feed-dot" style="background:${feedColor}; box-shadow:0 0 0 7px color-mix(in srgb, ${feedColor} 18%, transparent);"></div>
+            <div class="feed-copy">
+              <strong>${escapeHtml(row.machine || "Machine")} • ${escapeHtml(row.item || "Item")}</strong>
+              <span>
+                ${escapeHtml(status)}${row.daysLeft !== null ? ` • ${escapeHtml(row.daysLeft)} day${row.daysLeft === 1 ? "" : "s"} left` : ""}
+                ${row.runoutDate ? ` • Runout ${escapeHtml(row.runoutDate)}` : ""}
+                ${row.orderQty ? ` • Order ${escapeHtml(row.orderQty)}` : ""}
+              </span>
             </div>
-            <span class="${getStatusClass(item.status)}">${esc(item.status)}</span>
-          </div>
-          <div>
-            <div class="machine-usage">${Math.round(item.orderQty)}<small>Suggested order qty</small></div>
-            <div class="mini-bar"><span style="width:${width}%"></span></div>
           </div>
         `;
-        els.machineCards.appendChild(div);
-      });
+      }).join("");
     }
 
-    function renderFeed(items, metrics) {
-      els.actionFeed.innerHTML = '';
-      const feed = [];
+    function buildTicker(rows){
+      if(!rows.length){
+        return "No urgent runout items detected in the live sheet right now.";
+      }
+      return rows.slice(0, 10).map(row => {
+        const days = row.daysLeft ?? "--";
+        const status = row.status || "OK";
+        return `${row.machine || "Machine"} / ${row.item || "Item"} — ${status} — ${days} days left${row.orderQty ? ` — order ${row.orderQty}` : ""}`;
+      }).join("   ✦   ");
+    }
 
-      if (metrics.criticalCount > 0) {
-        feed.push({
-          title: `${metrics.criticalCount} critical item${metrics.criticalCount === 1 ? '' : 's'} need immediate attention`,
-          body: 'These items are most at risk of stockout before replacement inventory lands.'
-        });
+    function updateHeader(summary, priorityRows){
+      document.getElementById("metricTotal").textContent = summary.total ?? "--";
+      document.getElementById("metricCritical").textContent = summary.critical ?? "--";
+      document.getElementById("metricOrders").textContent = summary.orders ?? "--";
+
+      if(priorityRows.length){
+        const next = priorityRows[0];
+        document.getElementById("metricNextRunout").textContent = next.daysLeft ?? "--";
+        document.getElementById("metricNextRunoutSub").textContent =
+          `${next.machine || "Machine"}${next.item ? " • " + next.item : ""}${next.runoutDate ? " • " + next.runoutDate : ""}`;
       } else {
-        feed.push({
-          title: 'No critical items detected',
-          body: 'Current sheet shows no items in a critical state.'
-        });
+        document.getElementById("metricNextRunout").textContent = "--";
+        document.getElementById("metricNextRunoutSub").textContent = "No runout rows detected";
       }
 
-      if (metrics.ordersNeeded > 0) {
-        feed.push({
-          title: `${metrics.ordersNeeded} item${metrics.ordersNeeded === 1 ? '' : 's'} inside reorder threshold`,
-          body: 'Review the queue and place orders for yellow-flagged items before they escalate.'
-        });
-      }
-
-      const soonest = items.filter(i => toNumber(i.daysLeft) > 0).sort((a, b) => toNumber(a.daysLeft) - toNumber(b.daysLeft))[0];
-      if (soonest) {
-        feed.push({
-          title: `${soonest.machine} reaches pressure point in ${soonest.daysLeft} day${toNumber(soonest.daysLeft) === 1 ? '' : 's'}`,
-          body: `${soonest.item || 'Inventory item'} is the next likely operational pinch point.`
-        });
-      }
-
-      if (!feed.length) {
-        feed.push({ title: 'Feed waiting on live data', body: 'Once CSV data is available, this panel will generate operational guidance.' });
-      }
-
-      feed.slice(0, 5).forEach(entry => {
-        const div = document.createElement('div');
-        div.className = 'feed-item';
-        div.innerHTML = `
-          <div class="feed-line1"><span>${esc(entry.title)}</span></div>
-          <div class="feed-line2">${esc(entry.body)}</div>
-        `;
-        els.actionFeed.appendChild(div);
-      });
+      document.getElementById("lastSync").textContent = new Date().toLocaleTimeString([], {hour:'numeric', minute:'2-digit', second:'2-digit'});
     }
 
-    function updateHeader(metrics, items) {
-      const totalToBuy = items.reduce((sum, item) => sum + toNumber(item.orderQty), 0);
-      els.totalSkus.textContent = metrics.totalSkus || 0;
-      els.criticalCount.textContent = metrics.criticalCount || 0;
-      els.ordersNeeded.textContent = metrics.ordersNeeded || 0;
-      els.unitsToBuy.textContent = totalToBuy;
+    async function loadDashboard(){
+      document.getElementById("syncState").textContent = "Syncing";
+      try{
+        const res = await fetch(CONFIG.csvUrl, { cache: "no-store" });
+        const text = await res.text();
+        const rows = parseCSV(text);
 
-      let health = 'Stable';
-      if ((metrics.criticalCount || 0) > 0) health = 'High Risk';
-      else if ((metrics.ordersNeeded || 0) > 0) health = 'Watchlist';
-      els.systemHealth.textContent = health;
+        const summary = extractSummary(rows);
+        const criticalRows = extractBlockRows(rows, "Critical Items");
+        const orderRows = extractBlockRows(rows, "Needs Ordering");
+        const daysLeftRows = extractDaysLeftFilter(rows);
+        const priorityRows = combinedPriority({ daysLeftRows, criticalRows, orderRows });
 
-      els.queueSummary.textContent = `${items.length} priority record${items.length === 1 ? '' : 's'} loaded`;
-      els.footerState.textContent = `Feed healthy • ${items.length} records parsed`;
-      els.systemStatus.textContent = metrics.criticalCount > 0 ? 'Critical attention needed' : (metrics.ordersNeeded > 0 ? 'Order review active' : 'System stable');
+        updateHeader(summary, priorityRows);
+        renderPriorityQueue(priorityRows);
+        renderFeed(priorityRows);
+        renderTableRows("priorityTableBody", priorityRows.map(r => ({
+          machine:r.machine, item:r.item, onHand:r.onHand ?? "", status:r.status, orderQty:r.orderQty, daysLeft:r.daysLeft, runoutDate:r.runoutDate
+        })));
+        renderTableRows("criticalTableBody", criticalRows);
+        renderTableRows("orderTableBody", orderRows);
 
-      if (metrics.criticalCount > 0) {
-        els.tickerText.textContent = `Immediate action: ${metrics.criticalCount} critical item${metrics.criticalCount === 1 ? '' : 's'} flagged. Review order quantity recommendations now.`;
-      } else if (metrics.ordersNeeded > 0) {
-        els.tickerText.textContent = `${metrics.ordersNeeded} item${metrics.ordersNeeded === 1 ? '' : 's'} need ordering soon. Stay ahead of lead times to avoid a weekend stockout.`;
-      } else {
-        els.tickerText.textContent = 'All monitored inventory is currently within acceptable operating range.';
+        document.getElementById("tickerTrack").textContent = buildTicker(priorityRows);
+        document.getElementById("syncState").textContent = "Live";
+      } catch (err){
+        console.error(err);
+        document.getElementById("syncState").textContent = "Feed Error";
+        document.getElementById("priorityQueue").innerHTML = `<div class="empty">Could not load the published Google Sheets CSV feed.<br/>Check the published CSV URL and redeploy if needed.</div>`;
       }
     }
 
-    async function loadData() {
-      els.priorityError.style.display = 'none';
-      els.footerState.textContent = 'Syncing live feed…';
-      try {
-        const url = `${CSV_URL}&cacheBust=${Date.now()}`;
-        const response = await fetch(url, { cache: 'no-store' });
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const text = await response.text();
-        const rows = parseCSV(text).filter(r => r.some(cell => clean(cell) !== ''));
-        if (!rows.length) throw new Error('No rows returned from CSV feed.');
-
-        const { sections } = extractSections(rows);
-        const priorityItems = buildPriorityList(sections);
-        const runoutQueue = buildRunoutQueue(priorityItems);
-
-        renderPriority(priorityItems);
-        renderRunoutQueue(runoutQueue);
-        renderMachineCards(runoutQueue);
-        renderFeed(runoutQueue, sections.metrics);
-        updateHeader(sections.metrics, priorityItems);
-
-        els.lastUpdated.textContent = `Last sync: ${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`;
-      } catch (error) {
-        console.error(error);
-        els.priorityEmpty.style.display = 'block';
-        els.priorityError.style.display = 'block';
-        els.priorityError.textContent = `Feed error: ${error.message}. If you opened this locally and the browser blocks fetch for local files, serve the HTML from a simple web host or local server.`;
-        els.footerState.textContent = 'Feed error';
-        els.systemStatus.textContent = 'Feed connection issue';
-        els.tickerText.textContent = 'Connection issue detected. Verify the published CSV link still opens in the browser.';
-      }
-    }
-
-    loadData();
-    setInterval(loadData, REFRESH_MS);
+    loadDashboard();
+    setInterval(loadDashboard, CONFIG.refreshMs);
   </script>
 </body>
 </html>
