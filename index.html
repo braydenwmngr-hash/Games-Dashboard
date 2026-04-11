@@ -730,6 +730,7 @@
     }
     function renderFeed(rows){
       const root = document.getElementById("actionFeed");
+      if(!root) return;
       if(!rows.length){
         root.innerHTML = `<div class="empty">No runout actions in the feed.</div>`;
         return;
