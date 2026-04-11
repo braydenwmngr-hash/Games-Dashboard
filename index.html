@@ -3,13 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Crane Control Room</title>
+  <title>Games Control Room</title>
   <style>
     :root{
       --bg-1:#07111f;
       --bg-2:#0b1d35;
-      --panel:rgba(10,22,40,.72);
-      --panel-2:rgba(255,255,255,.06);
       --line:rgba(255,255,255,.10);
       --text:#eaf2ff;
       --muted:#9fb2cf;
@@ -18,8 +16,10 @@
       --green:#40d98a;
       --yellow:#ffd54d;
       --red:#ff5c7c;
+      --violet:#9f8cff;
       --shadow:0 18px 50px rgba(0,0,0,.35);
       --radius:22px;
+      --glass:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
     }
 
     *{box-sizing:border-box}
@@ -27,7 +27,7 @@
     body{
       margin:0;
       color:var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       background:
         radial-gradient(1200px 700px at 15% -10%, rgba(62,126,255,.18), transparent 60%),
         radial-gradient(1000px 700px at 100% 0%, rgba(63,229,255,.13), transparent 55%),
@@ -40,14 +40,14 @@
       background-image:
         linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-      background-size: 28px 28px;
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,.45), rgba(0,0,0,.08));
+      background-size:28px 28px;
+      mask-image:linear-gradient(to bottom, rgba(0,0,0,.45), rgba(0,0,0,.08));
     }
 
     .shell{
-      height:100%;
+      min-height:100%;
       display:grid;
-      grid-template-rows: 88px 1fr;
+      grid-template-rows:88px 1fr;
       padding:18px;
       gap:16px;
     }
@@ -60,8 +60,8 @@
       padding:16px 22px;
       border:1px solid var(--line);
       border-radius:26px;
-      background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
-      backdrop-filter: blur(18px);
+      background:var(--glass);
+      backdrop-filter:blur(18px);
       box-shadow:var(--shadow);
     }
 
@@ -77,8 +77,9 @@
       background:
         radial-gradient(circle at 30% 30%, rgba(255,255,255,.28), transparent 45%),
         linear-gradient(135deg, rgba(98,183,255,.9), rgba(86,239,255,.55));
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 0 24px rgba(89,197,255,.35);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.35), 0 0 24px rgba(89,197,255,.35);
       position:relative;
+      flex:0 0 auto;
     }
     .brand-mark:after{
       content:"";
@@ -103,6 +104,44 @@
       text-transform:uppercase;
     }
 
+    .top-actions{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .tab-switch{
+      display:flex;
+      gap:8px;
+      padding:6px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      backdrop-filter:blur(14px);
+    }
+
+    .tab-btn{
+      border:0;
+      color:var(--muted);
+      background:transparent;
+      border-radius:999px;
+      padding:10px 16px;
+      font-size:12px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-weight:800;
+      cursor:pointer;
+      transition:.2s ease;
+    }
+    .tab-btn:hover{ color:var(--text); }
+    .tab-btn.active{
+      color:#041321;
+      background:linear-gradient(135deg, rgba(106,184,255,.98), rgba(97,231,255,.95));
+      box-shadow:0 8px 20px rgba(97,231,255,.22);
+    }
+
     .status-strip{
       display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end; align-items:center;
     }
@@ -122,7 +161,6 @@
     .pulse-dot{
       display:inline-block; width:9px; height:9px; border-radius:50%;
       background:var(--green); margin-right:8px;
-      box-shadow:0 0 0 rgba(64,217,138,.7);
       animation:pulse 1.8s infinite;
       vertical-align:middle;
     }
@@ -132,35 +170,36 @@
       100%{box-shadow:0 0 0 0 rgba(64,217,138,0)}
     }
 
+    .pages{ min-height:0; position:relative; }
+    .page{ min-height:0; height:100%; display:none; }
+    .page.active{ display:block; }
+
     .content{
       min-height:0;
       display:grid;
-      grid-template-columns: 1.25fr 1fr;
+      grid-template-columns:1.3fr .95fr;
       gap:16px;
     }
 
-    .left-col, .right-col{
+    .left-col,.right-col{
       min-height:0;
       display:grid;
       gap:16px;
     }
-    .left-col{
-      grid-template-rows: auto auto 1fr;
-    }
-    .right-col{
-      grid-template-rows: auto auto 1fr;
-    }
+
+    .left-col{ grid-template-rows:auto auto 1fr; }
+    .right-col{ grid-template-rows:auto 1fr; }
 
     .cards{
       display:grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns:repeat(4,minmax(0,1fr));
       gap:16px;
     }
 
-    .card, .panel{
+    .card,.panel{
       border:1px solid var(--line);
-      background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-      backdrop-filter: blur(16px);
+      background:var(--glass);
+      backdrop-filter:blur(16px);
       box-shadow:var(--shadow);
       border-radius:var(--radius);
       overflow:hidden;
@@ -170,6 +209,7 @@
     .metric{
       padding:18px 18px 16px;
       position:relative;
+      min-height:112px;
     }
     .metric .label{
       color:var(--muted);
@@ -189,10 +229,7 @@
       color:var(--muted);
       font-size:13px;
     }
-    .metric.blue:before,
-    .metric.red:before,
-    .metric.yellow:before,
-    .metric.green:before{
+    .metric.blue:before,.metric.red:before,.metric.yellow:before,.metric.green:before,.metric.violet:before{
       content:"";
       position:absolute; inset:auto -30px -30px auto;
       width:130px; height:130px; border-radius:50%;
@@ -202,6 +239,7 @@
     .metric.red:before{ background:var(--red); }
     .metric.yellow:before{ background:var(--yellow); }
     .metric.green:before{ background:var(--green); }
+    .metric.violet:before{ background:var(--violet); }
 
     .panel-head{
       display:flex;
@@ -229,13 +267,16 @@
       overflow:auto;
     }
 
+    .split{ display:grid; gap:16px; min-height:0; }
+    .split-2{ grid-template-columns:1fr 1fr; }
+
     table{
       width:100%;
       border-collapse:collapse;
       font-size:14px;
     }
     thead th{
-      position:sticky; top:0;
+      position:sticky; top:0; z-index:1;
       background:rgba(9,19,33,.95);
       color:var(--muted);
       text-align:left;
@@ -265,16 +306,14 @@
     }
     .status-ok{ color:#0f2f1f; background:rgba(64,217,138,.92); }
     .status-order{ color:#392b00; background:rgba(255,213,77,.95); }
-    .status-critical{ color:#3d0012; background:rgba(255,92,124,.95); box-shadow:0 0 22px rgba(255,92,124,.18); }
+    .status-critical{ color:#3d0012; background:rgba(255,92,124,.95); }
+    .status-neutral{ color:#eaf2ff; background:rgba(255,255,255,.08); border-color:rgba(255,255,255,.08); }
 
-    .queue{
-      display:grid;
-      gap:12px;
-    }
+    .queue{ display:grid; gap:12px; }
 
     .queue-item{
       display:grid;
-      grid-template-columns: 70px 1fr auto;
+      grid-template-columns:70px 1fr auto;
       gap:14px;
       align-items:center;
       padding:14px;
@@ -290,9 +329,7 @@
       border:1px solid rgba(255,255,255,.12);
       color:white;
     }
-    .queue-main{
-      min-width:0;
-    }
+    .queue-main{ min-width:0; }
     .queue-title{
       font-size:18px;
       font-weight:800;
@@ -328,10 +365,7 @@
       margin-top:6px;
     }
 
-    .feed{
-      display:grid;
-      gap:10px;
-    }
+    .feed{ display:grid; gap:10px; }
     .feed-row{
       display:flex; gap:12px; align-items:flex-start;
       padding:12px 0;
@@ -340,11 +374,46 @@
     .feed-dot{
       width:10px; height:10px; border-radius:50%; margin-top:5px;
       background:var(--blue);
-      box-shadow:0 0 0 7px rgba(106,184,255,.1);
       flex:0 0 auto;
     }
     .feed-copy strong{ display:block; font-size:14px; margin-bottom:3px; }
     .feed-copy span{ color:var(--muted); font-size:13px; }
+
+    .list-cards{ display:grid; gap:12px; }
+    .list-card{
+      padding:15px 16px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.05);
+    }
+    .list-top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:8px;
+    }
+    .list-name{
+      font-weight:800;
+      font-size:16px;
+      min-width:0;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .list-kpi{
+      font-size:24px;
+      font-weight:900;
+      color:var(--cyan);
+      white-space:nowrap;
+    }
+    .list-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px 12px;
+      color:var(--muted);
+      font-size:13px;
+    }
 
     .empty{
       display:grid; place-items:center;
@@ -357,6 +426,19 @@
       padding:18px;
     }
 
+    .kicker{
+      display:inline-block;
+      padding:7px 10px;
+      border-radius:999px;
+      background:rgba(97,231,255,.08);
+      border:1px solid rgba(97,231,255,.16);
+      color:var(--cyan);
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
     .ticker{
       position:fixed;
       left:18px; right:18px; bottom:18px;
@@ -366,9 +448,10 @@
       overflow:hidden;
       border:1px solid var(--line);
       border-radius:18px;
-      background:linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
-      backdrop-filter: blur(16px);
+      background:var(--glass);
+      backdrop-filter:blur(16px);
       box-shadow:var(--shadow);
+      z-index:5;
     }
     .ticker-label{
       padding:0 16px;
@@ -386,7 +469,7 @@
       white-space:nowrap;
       display:inline-block;
       padding-left:100%;
-      animation: ticker 28s linear infinite;
+      animation:ticker 28s linear infinite;
       color:#dce8ff;
       font-size:14px;
       letter-spacing:.03em;
@@ -396,17 +479,24 @@
       100%{ transform:translateX(-100%); }
     }
 
-    .small{
-      font-size:12px;
-      color:var(--muted);
+    .small{ font-size:12px; color:var(--muted); }
+
+    @media (max-width:1480px){
+      body{ overflow:auto; }
+      .shell{ grid-template-rows:auto auto; padding-bottom:18px; }
+      .topbar{ flex-direction:column; align-items:flex-start; }
+      .top-actions{ width:100%; justify-content:space-between; }
+      .content{ grid-template-columns:1fr; }
+      .cards{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .ticker{ position:static; margin:0 18px 18px; }
+      .page{ height:auto; }
     }
 
-    @media (max-width: 1400px){
-      .content{ grid-template-columns:1fr; }
-      .cards{ grid-template-columns: repeat(2, minmax(0,1fr)); }
-      body{ overflow:auto; }
-      .ticker{ position:static; margin:0 18px 18px; }
-      .shell{ grid-template-rows:88px auto; padding-bottom:18px; }
+    @media (max-width:900px){
+      .cards{ grid-template-columns:1fr; }
+      .split-2{ grid-template-columns:1fr; }
+      .queue-item{ grid-template-columns:1fr; }
+      .queue-right{ text-align:left; min-width:0; }
     }
   </style>
 </head>
@@ -418,156 +508,193 @@
       <div class="brand">
         <div class="brand-mark"></div>
         <div>
-          <h1>Crane Control Room</h1>
-          <p>Live Inventory & Runout Operations</p>
+          <h1>Games Control Room</h1>
+          <p>Live Inventory, FIFO &amp; Performance Operations</p>
         </div>
       </div>
-      <div class="status-strip">
-        <div class="pill"><span class="pulse-dot"></span><strong id="syncState">Live</strong></div>
-        <div class="pill">Last Sync: <strong id="lastSync">--</strong></div>
-        <div class="pill">Source: <strong>Published Google Sheet CSV</strong></div>
-        <div class="pill">Refresh: <strong>30s</strong></div>
+
+      <div class="top-actions">
+        <div class="tab-switch">
+          <button class="tab-btn active" data-tab="inventory">Inventory Ops</button>
+          <button class="tab-btn" data-tab="performance">Games Performance</button>
+        </div>
+
+        <div class="status-strip">
+          <div class="pill"><span class="pulse-dot"></span><strong id="syncState">Live</strong></div>
+          <div class="pill">Last Sync: <strong id="lastSync">--</strong></div>
+          <div class="pill">Sources: <strong>3 Google Sheets CSV Feeds</strong></div>
+          <div class="pill">Refresh: <strong>30s</strong></div>
+        </div>
       </div>
     </div>
 
-    <div class="content">
-      <div class="left-col">
-        <div class="cards">
-          <div class="card metric blue">
-            <div class="label">Total SKUs</div>
-            <div class="value" id="metricTotal">--</div>
-            <div class="sub">Inventory lines tracked</div>
-          </div>
-          <div class="card metric red">
-            <div class="label">Critical Count</div>
-            <div class="value" id="metricCritical">--</div>
-            <div class="sub">Immediate action items</div>
-          </div>
-          <div class="card metric yellow">
-            <div class="label">Orders Needed</div>
-            <div class="value" id="metricOrders">--</div>
-            <div class="sub">Items below reorder threshold</div>
-          </div>
-          <div class="card metric green">
-            <div class="label">Next Runout</div>
-            <div class="value" id="metricNextRunout">--</div>
-            <div class="sub" id="metricNextRunoutSub">Awaiting data</div>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-head">
-            <div>
-              <h3 class="panel-title">Order Soonest to Latest</h3>
-              <div class="panel-sub">Live priority rail from Days Left Filter</div>
+    <div class="pages">
+      <section id="page-inventory" class="page active">
+        <div class="content">
+          <div class="left-col">
+            <div class="cards">
+              <div class="card metric blue">
+                <div class="label">Total SKUs</div>
+                <div class="value" id="metricTotal">--</div>
+                <div class="sub">Inventory lines tracked</div>
+              </div>
+              <div class="card metric red">
+                <div class="label">Critical Count</div>
+                <div class="value" id="metricCritical">--</div>
+                <div class="sub">Immediate action items</div>
+              </div>
+              <div class="card metric yellow">
+                <div class="label">Orders Needed</div>
+                <div class="value" id="metricOrders">--</div>
+                <div class="sub">Items below reorder threshold</div>
+              </div>
+              <div class="card metric green">
+                <div class="label">Next Runout</div>
+                <div class="value" id="metricNextRunout">--</div>
+                <div class="sub" id="metricNextRunoutSub">Awaiting data</div>
+              </div>
             </div>
-            <div class="small" id="priorityCount">0 items</div>
-          </div>
-          <div class="panel-body">
-            <div id="priorityQueue" class="queue"></div>
-          </div>
-        </div>
 
-        <div class="panel">
-          <div class="panel-head">
-            <div>
-              <h3 class="panel-title">Priority Inventory Table</h3>
-              <div class="panel-sub">Critical, order, and near-runout visibility</div>
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3 class="panel-title">Order Soonest to Latest</h3>
+                  <div class="panel-sub">Live priority rail from Days Left Filter</div>
+                </div>
+                <div class="small" id="priorityCount">0 items</div>
+              </div>
+              <div class="panel-body">
+                <div id="priorityQueue" class="queue"></div>
+              </div>
             </div>
-          </div>
-          <div class="panel-body">
-            <table>
-              <thead>
-                <tr>
-                  <th>Machine</th>
-                  <th>Item</th>
-                  <th>On Hand</th>
-                  <th>Status</th>
-                  <th>Order Qty</th>
-                  <th>Days Left</th>
-                  <th>Runout Date</th>
-                </tr>
-              </thead>
-              <tbody id="priorityTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
 
-      <div class="right-col">
-        <div class="panel">
-          <div class="panel-head">
-            <div>
-              <h3 class="panel-title">Runout Feed</h3>
-              <div class="panel-sub">What needs attention first</div>
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3 class="panel-title">Priority Inventory Table</h3>
+                  <div class="panel-sub">Critical, order, and near-runout visibility</div>
+                </div>
+              </div>
+              <div class="panel-body">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Machine</th>
+                      <th>Item</th>
+                      <th>On Hand</th>
+                      <th>Status</th>
+                      <th>Order Qty</th>
+                      <th>Days Left</th>
+                      <th>Runout Date</th>
+                    </tr>
+                  </thead>
+                  <tbody id="priorityTableBody"></tbody>
+                </table>
+              </div>
             </div>
           </div>
-          <div class="panel-body">
-            <div id="actionFeed" class="feed"></div>
-          </div>
-        </div>
 
-        <div class="panel">
-          <div class="panel-head">
-            <div>
-              <h3 class="panel-title">Critical Items Block</h3>
-              <div class="panel-sub">Directly mirrored from TV Dashboard section</div>
+          <div class="right-col">
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3 class="panel-title">Runout Feed</h3>
+                  <div class="panel-sub">What needs attention first</div>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div id="actionFeed" class="feed"></div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3 class="panel-title">Crane FIFO</h3>
+                  <div class="panel-sub" id="fifoSub">Live FIFO signal from published sheet</div>
+                </div>
+                <div class="kicker">New feed slot</div>
+              </div>
+              <div class="panel-body">
+                <div id="fifoContent" class="split">
+                  <div class="empty">Loading FIFO feed…</div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="panel-body">
-            <table>
-              <thead>
-                <tr>
-                  <th>Machine</th>
-                  <th>Item</th>
-                  <th>On Hand</th>
-                  <th>Status</th>
-                  <th>Order Qty</th>
-                  <th>Days Left</th>
-                  <th>Runout Date</th>
-                </tr>
-              </thead>
-              <tbody id="criticalTableBody"></tbody>
-            </table>
-          </div>
         </div>
+      </section>
 
-        <div class="panel">
-          <div class="panel-head">
-            <div>
-              <h3 class="panel-title">Needs Ordering Block</h3>
-              <div class="panel-sub">Only shows valid rows; ignores #N/A</div>
+      <section id="page-performance" class="page">
+        <div class="content">
+          <div class="left-col">
+            <div class="cards" id="performanceMetrics">
+              <div class="card metric blue">
+                <div class="label">Performance Feed</div>
+                <div class="value">--</div>
+                <div class="sub">Waiting for published CSV</div>
+              </div>
+              <div class="card metric violet">
+                <div class="label">Signal Rows</div>
+                <div class="value">--</div>
+                <div class="sub">Live performance records</div>
+              </div>
+              <div class="card metric green">
+                <div class="label">Primary KPI</div>
+                <div class="value">--</div>
+                <div class="sub">Auto-detected from sheet</div>
+              </div>
+              <div class="card metric yellow">
+                <div class="label">Coverage</div>
+                <div class="value">--</div>
+                <div class="sub">Filled cells across the feed</div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3 class="panel-title">Performance Board</h3>
+                  <div class="panel-sub" id="performanceBoardSub">Auto-built from your Games Performance CSV</div>
+                </div>
+                <div class="small" id="performanceBoardCount">0 cards</div>
+              </div>
+              <div class="panel-body">
+                <div id="performanceBoard" class="list-cards"></div>
+              </div>
             </div>
           </div>
-          <div class="panel-body">
-            <table>
-              <thead>
-                <tr>
-                  <th>Machine</th>
-                  <th>Item</th>
-                  <th>On Hand</th>
-                  <th>Status</th>
-                  <th>Order Qty</th>
-                  <th>Days Left</th>
-                  <th>Runout Date</th>
-                </tr>
-              </thead>
-              <tbody id="orderTableBody"></tbody>
-            </table>
+
+          <div class="right-col">
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3 class="panel-title">Performance Matrix</h3>
+                  <div class="panel-sub">Full live table from the Games Performance sheet</div>
+                </div>
+              </div>
+              <div class="panel-body">
+                <div id="performanceTableWrap">
+                  <div class="empty">Loading Games Performance feed…</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   </div>
 
   <div class="ticker">
     <div class="ticker-label">Ops Ticker</div>
-    <div class="ticker-track" id="tickerTrack">Loading live inventory feed…</div>
+    <div class="ticker-track" id="tickerTrack">Loading live control room feeds…</div>
   </div>
 
   <script>
     const CONFIG = {
-      csvUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQu7HMKSw3Slo20XCcxff99jLjqKM955_AvMMyxLBvnRsgISC_SZo2niEpDv9jqwpMm7SGfAKfQW2S6/pub?gid=2026192315&single=true&output=csv",
+      inventoryUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQu7HMKSw3Slo20XCcxff99jLjqKM955_AvMMyxLBvnRsgISC_SZo2niEpDv9jqwpMm7SGfAKfQW2S6/pub?gid=2026192315&single=true&output=csv",
+      fifoUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQjM6aUUFaApVebMR47dtbf9OBRAs_C2mVYxXiwwA_Rn3LMDNkDh5oJWpNnkRnzsxNdGQ_4gXdKF53b/pub?gid=0&single=true&output=csv",
+      performanceUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQp9U4ii7ptF2_UOjx9_j16h6TtV92iRZSLJL_UsaDWxl_AmXG8zHLRcf7ZlgVls52nAm4ybSESVV5x/pub?gid=0&single=true&output=csv",
       refreshMs: 30000
     };
 
@@ -621,6 +748,24 @@
       return Number.isFinite(num) ? num : null;
     }
 
+    function prettifyLabel(value){
+      return String(value || "")
+        .replace(/[_-]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    function formatMetric(value){
+      if(value === null || value === undefined || value === "") return "--";
+      if(typeof value === "number"){
+        if(Math.abs(value) >= 1000) return value.toLocaleString();
+        if(Math.abs(value) % 1 !== 0) return value.toFixed(1);
+        return String(value);
+      }
+      return String(value);
+    }
+
     function findCell(rows, label){
       const lower = label.toLowerCase();
       for(let r = 0; r < rows.length; r++){
@@ -649,8 +794,10 @@
     }
 
     function statusBadge(status){
-      const cls = status === "CRITICAL" ? "status-critical" : status === "ORDER" ? "status-order" : "status-ok";
-      return `<span class="badge ${cls}">${escapeHtml(status || "OK")}</span>`;
+      const normalized = normalizeStatus(status);
+      if(!normalized) return `<span class="badge status-neutral">${escapeHtml(status || "Live")}</span>`;
+      const cls = normalized === "CRITICAL" ? "status-critical" : normalized === "ORDER" ? "status-order" : "status-ok";
+      return `<span class="badge ${cls}">${escapeHtml(normalized)}</span>`;
     }
 
     function readSectionRows(rows, label, maxRows = 12){
@@ -711,30 +858,23 @@
         if(isHeaderLike(cells)) continue;
         if(rowNonEmptyCount(cells) < 3) continue;
 
-        // Supports either:
-        // machine, item, daysLeft, runoutDate, status, orderQty?
-        // or machine, item, daysLeft, runoutDate, status
         const machine = cells[0] || "";
         const item = cells[1] || "";
         const daysLeft = safeNumber(cells[2]);
         const runoutDate = cells[3] || "";
         const status = normalizeStatus(cells[4] || "");
         const orderQty = cells[5] || "";
+        const onHand = cells[6] || "";
         if(!(machine || item)) continue;
-        out.push({ machine, item, daysLeft, runoutDate, status, orderQty });
+        out.push({ machine, item, daysLeft, runoutDate, status, orderQty, onHand });
       }
 
-      out.sort((a,b) => {
-        const da = a.daysLeft ?? 99999;
-        const db = b.daysLeft ?? 99999;
-        return da - db;
-      });
+      out.sort((a,b) => (a.daysLeft ?? 99999) - (b.daysLeft ?? 99999));
       return out;
     }
 
     function combinedPriority({daysLeftRows, criticalRows, orderRows}){
       if(daysLeftRows.length) return daysLeftRows;
-
       const merged = [...criticalRows, ...orderRows].filter(x => x.machine || x.item);
       merged.sort((a,b) => (a.daysLeft ?? 99999) - (b.daysLeft ?? 99999));
       return merged;
@@ -802,7 +942,7 @@
         const feedColor = status === "CRITICAL" ? "var(--red)" : status === "ORDER" ? "var(--yellow)" : "var(--blue)";
         return `
           <div class="feed-row">
-            <div class="feed-dot" style="background:${feedColor}; box-shadow:0 0 0 7px color-mix(in srgb, ${feedColor} 18%, transparent);"></div>
+            <div class="feed-dot" style="background:${feedColor};"></div>
             <div class="feed-copy">
               <strong>${escapeHtml(row.machine || "Machine")} • ${escapeHtml(row.item || "Item")}</strong>
               <span>
@@ -816,15 +956,26 @@
       }).join("");
     }
 
-    function buildTicker(rows){
-      if(!rows.length){
-        return "No urgent runout items detected in the live sheet right now.";
+    function buildTicker(inventoryRows, fifoInfo, performanceInfo){
+      const parts = [];
+
+      if(inventoryRows?.length){
+        parts.push(inventoryRows.slice(0, 5).map(row => {
+          const days = row.daysLeft ?? "--";
+          const status = row.status || "OK";
+          return `${row.machine || "Machine"} / ${row.item || "Item"} — ${status} — ${days} days left${row.orderQty ? ` — order ${row.orderQty}` : ""}`;
+        }).join("   ✦   "));
       }
-      return rows.slice(0, 10).map(row => {
-        const days = row.daysLeft ?? "--";
-        const status = row.status || "OK";
-        return `${row.machine || "Machine"} / ${row.item || "Item"} — ${status} — ${days} days left${row.orderQty ? ` — order ${row.orderQty}` : ""}`;
-      }).join("   ✦   ");
+
+      if(fifoInfo?.summaryLine){
+        parts.push(`Crane FIFO — ${fifoInfo.summaryLine}`);
+      }
+
+      if(performanceInfo?.heroLine){
+        parts.push(`Games Performance — ${performanceInfo.heroLine}`);
+      }
+
+      return parts.filter(Boolean).join("   ✦   ") || "No urgent runout items detected in the live sheets right now.";
     }
 
     function updateHeader(summary, priorityRows){
@@ -841,41 +992,290 @@
         document.getElementById("metricNextRunout").textContent = "--";
         document.getElementById("metricNextRunoutSub").textContent = "No runout rows detected";
       }
+    }
 
-      document.getElementById("lastSync").textContent = new Date().toLocaleTimeString([], {hour:'numeric', minute:'2-digit', second:'2-digit'});
+    function findHeaderRow(rows){
+      let bestIndex = 0;
+      let bestScore = -1;
+      const limit = Math.min(rows.length, 12);
+
+      for(let i = 0; i < limit; i++){
+        const row = rows[i] || [];
+        const nonEmpty = row.filter(v => String(v || "").trim() !== "");
+        const score = nonEmpty.length;
+        if(score >= 2 && score > bestScore){
+          bestScore = score;
+          bestIndex = i;
+        }
+      }
+      return bestIndex;
+    }
+
+    function normalizeRows(rows){
+      const width = Math.max(...rows.map(r => r.length), 0);
+      return rows.map(row => {
+        const next = row.slice();
+        while(next.length < width) next.push("");
+        return next;
+      });
+    }
+
+    function parseGenericDataset(rows){
+      const clean = rows.filter(row => row.some(cell => String(cell || "").trim() !== ""));
+      if(!clean.length) return { headers: [], records: [] };
+
+      const normalized = normalizeRows(clean);
+      const headerIndex = findHeaderRow(normalized);
+      const headers = normalized[headerIndex].map((value, index) => prettifyLabel(value || `Column ${index + 1}`));
+
+      const records = normalized.slice(headerIndex + 1)
+        .filter(row => row.some(cell => String(cell || "").trim() !== ""))
+        .map(row => Object.fromEntries(headers.map((header, index) => [header, row[index] || ""])));
+
+      return { headers, records };
+    }
+
+    function getColumnProfiles(headers, records){
+      return headers.map(header => {
+        const values = records.map(record => record[header]);
+        const numericValues = values.map(v => safeNumber(v)).filter(v => v !== null);
+        return {
+          header,
+          values,
+          numericValues,
+          numericRatio: values.length ? numericValues.length / values.length : 0
+        };
+      });
+    }
+
+    function computeFilledPercent(headers, records){
+      if(!headers.length || !records.length) return 0;
+      const total = headers.length * records.length;
+      let filled = 0;
+      records.forEach(record => {
+        headers.forEach(header => {
+          if(String(record[header] || "").trim() !== "") filled++;
+        });
+      });
+      return Math.round((filled / total) * 100);
+    }
+
+    function renderGenericTable(headers, records, limitRows = 25){
+      if(!headers.length || !records.length){
+        return `<div class="empty">No rows are available in this feed right now.</div>`;
+      }
+
+      const limited = records.slice(0, limitRows);
+      return `
+        <table>
+          <thead>
+            <tr>${headers.map(header => `<th>${escapeHtml(header)}</th>`).join("")}</tr>
+          </thead>
+          <tbody>
+            ${limited.map(record => `
+              <tr>${headers.map(header => `<td>${escapeHtml(record[header])}</td>`).join("")}</tr>
+            `).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function computeFifoView(rows){
+      const dataset = parseGenericDataset(rows);
+      const profiles = getColumnProfiles(dataset.headers, dataset.records);
+      const numericProfile = profiles.find(profile => profile.numericRatio >= 0.6 && profile.numericValues.length);
+      const summaryLine = dataset.records.length
+        ? `${dataset.records.length} live row${dataset.records.length === 1 ? "" : "s"} tracked${numericProfile ? ` • ${prettifyLabel(numericProfile.header)} avg ${formatMetric(numericProfile.numericValues.reduce((a,b) => a+b, 0) / numericProfile.numericValues.length)}` : ""}`
+        : "No live rows";
+
+      return { ...dataset, summaryLine };
+    }
+
+    function renderFifo(view){
+      const root = document.getElementById("fifoContent");
+      document.getElementById("fifoSub").textContent = view.summaryLine || "Live FIFO signal from published sheet";
+
+      if(!view.records.length){
+        root.innerHTML = `<div class="empty">No FIFO rows detected from the published sheet.</div>`;
+        return;
+      }
+
+      const profiles = getColumnProfiles(view.headers, view.records);
+      const topProfiles = profiles.filter(p => p.numericRatio >= 0.6 && p.numericValues.length).slice(0, 2);
+      const cards = (topProfiles.length ? topProfiles : [{header:"Live Rows", numericValues:[view.records.length]}, {header:"Columns", numericValues:[view.headers.length]}]);
+
+      root.innerHTML = `
+        <div class="split split-2">
+          ${cards.map((profile, idx) => {
+            const avg = profile.numericValues.length ? profile.numericValues.reduce((a,b) => a+b, 0) / profile.numericValues.length : null;
+            const colorClass = ["blue","green","violet","yellow"][idx % 4];
+            return `
+              <div class="card metric ${colorClass}">
+                <div class="label">${escapeHtml(prettifyLabel(profile.header))}</div>
+                <div class="value">${escapeHtml(formatMetric(avg ?? profile.numericValues[0] ?? "--"))}</div>
+                <div class="sub">${profile.header === "Live Rows" ? "Rows currently visible" : "Average across visible FIFO feed"}</div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+        ${renderGenericTable(view.headers, view.records, 10)}
+      `;
+    }
+
+    function derivePerformanceSummary(rows){
+      const dataset = parseGenericDataset(rows);
+      const profiles = getColumnProfiles(dataset.headers, dataset.records);
+      const numericProfiles = profiles
+        .filter(profile => profile.numericRatio >= 0.6 && profile.numericValues.length)
+        .sort((a,b) => b.numericValues.length - a.numericValues.length);
+
+      const filledPercent = computeFilledPercent(dataset.headers, dataset.records);
+      const primaryNumeric = numericProfiles[0] || null;
+      const labelField = (profiles.find(profile => profile.numericRatio < 0.4 && profile.header)?.header) || dataset.headers[0] || "Row";
+
+      const metrics = [
+        { label: "Live Rows", value: dataset.records.length, sub: "Performance records in feed", color: "blue" },
+        { label: "Data Columns", value: dataset.headers.length, sub: "Fields auto-detected", color: "violet" },
+        {
+          label: primaryNumeric ? prettifyLabel(primaryNumeric.header) : "Primary KPI",
+          value: primaryNumeric ? (primaryNumeric.numericValues[primaryNumeric.numericValues.length - 1] ?? primaryNumeric.numericValues[0]) : "--",
+          sub: primaryNumeric ? "Latest visible numeric signal" : "No numeric KPI detected",
+          color: "green"
+        },
+        { label: "Coverage", value: `${filledPercent}%`, sub: "Filled cells across feed", color: "yellow" }
+      ];
+
+      let boardItems = [];
+      let heroLine = `${dataset.records.length} live row${dataset.records.length === 1 ? "" : "s"} • ${dataset.headers.length} columns`;
+
+      if(primaryNumeric){
+        boardItems = dataset.records.map((record, index) => ({
+          title: record[labelField] || `Row ${index + 1}`,
+          kpi: safeNumber(record[primaryNumeric.header]),
+          meta: dataset.headers
+            .filter(header => header !== labelField && header !== primaryNumeric.header)
+            .slice(0, 3)
+            .map(header => `${header}: ${record[header] || "—"}`)
+        }))
+        .filter(item => item.kpi !== null)
+        .sort((a,b) => b.kpi - a.kpi)
+        .slice(0, 8);
+
+        const avg = primaryNumeric.numericValues.reduce((a,b) => a+b, 0) / primaryNumeric.numericValues.length;
+        heroLine = `${prettifyLabel(primaryNumeric.header)} avg ${formatMetric(avg)} • ${dataset.records.length} live row${dataset.records.length === 1 ? "" : "s"}`;
+      } else {
+        boardItems = dataset.records.slice(0, 8).map((record, index) => ({
+          title: record[labelField] || `Row ${index + 1}`,
+          kpi: null,
+          meta: dataset.headers.slice(1, 4).map(header => `${header}: ${record[header] || "—"}`)
+        }));
+      }
+
+      return { ...dataset, metrics, boardItems, heroLine };
+    }
+
+    function renderPerformance(view){
+      document.getElementById("performanceMetrics").innerHTML = view.metrics.map(metric => `
+        <div class="card metric ${metric.color}">
+          <div class="label">${escapeHtml(metric.label)}</div>
+          <div class="value">${escapeHtml(formatMetric(metric.value))}</div>
+          <div class="sub">${escapeHtml(metric.sub)}</div>
+        </div>
+      `).join("");
+
+      document.getElementById("performanceBoardSub").textContent = view.heroLine;
+      document.getElementById("performanceBoardCount").textContent = `${view.boardItems.length} cards`;
+
+      const boardRoot = document.getElementById("performanceBoard");
+      if(!view.boardItems.length){
+        boardRoot.innerHTML = `<div class="empty">No performance records are available right now.</div>`;
+      } else {
+        boardRoot.innerHTML = view.boardItems.map(item => `
+          <div class="list-card">
+            <div class="list-top">
+              <div class="list-name">${escapeHtml(item.title)}</div>
+              <div class="list-kpi">${item.kpi === null ? "Live" : escapeHtml(formatMetric(item.kpi))}</div>
+            </div>
+            <div class="list-meta">
+              ${item.meta.map(line => `<span>${escapeHtml(line)}</span>`).join("")}
+            </div>
+          </div>
+        `).join("");
+      }
+
+      document.getElementById("performanceTableWrap").innerHTML = renderGenericTable(view.headers, view.records, 30);
+    }
+
+    function setSyncState(text){
+      document.getElementById("syncState").textContent = text;
+    }
+
+    function activateTab(tab){
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.tab === tab);
+      });
+      document.getElementById("page-inventory").classList.toggle("active", tab === "inventory");
+      document.getElementById("page-performance").classList.toggle("active", tab === "performance");
+    }
+
+    async function fetchCsv(url){
+      const response = await fetch(url, { cache: "no-store" });
+      if(!response.ok) throw new Error(`HTTP ${response.status}`);
+      return parseCSV(await response.text());
     }
 
     async function loadDashboard(){
-      document.getElementById("syncState").textContent = "Syncing";
+      setSyncState("Syncing");
       try{
-        const res = await fetch(CONFIG.csvUrl, { cache: "no-store" });
-        const text = await res.text();
-        const rows = parseCSV(text);
+        const [inventoryRows, fifoRows, performanceRows] = await Promise.all([
+          fetchCsv(CONFIG.inventoryUrl),
+          fetchCsv(CONFIG.fifoUrl),
+          fetchCsv(CONFIG.performanceUrl)
+        ]);
 
-        const summary = extractSummary(rows);
-        const criticalRows = extractBlockRows(rows, "Critical Items");
-        const orderRows = extractBlockRows(rows, "Needs Ordering");
-        const daysLeftRows = extractDaysLeftFilter(rows);
+        const summary = extractSummary(inventoryRows);
+        const criticalRows = extractBlockRows(inventoryRows, "Critical Items");
+        const orderRows = extractBlockRows(inventoryRows, "Needs Ordering");
+        const daysLeftRows = extractDaysLeftFilter(inventoryRows);
         const priorityRows = combinedPriority({ daysLeftRows, criticalRows, orderRows });
 
         updateHeader(summary, priorityRows);
         renderPriorityQueue(priorityRows);
         renderFeed(priorityRows);
         renderTableRows("priorityTableBody", priorityRows.map(r => ({
-          machine:r.machine, item:r.item, onHand:r.onHand ?? "", status:r.status, orderQty:r.orderQty, daysLeft:r.daysLeft, runoutDate:r.runoutDate
+          machine:r.machine,
+          item:r.item,
+          onHand:r.onHand ?? "",
+          status:r.status,
+          orderQty:r.orderQty,
+          daysLeft:r.daysLeft,
+          runoutDate:r.runoutDate
         })));
-        renderTableRows("criticalTableBody", criticalRows);
-        renderTableRows("orderTableBody", orderRows);
 
-        document.getElementById("tickerTrack").textContent = buildTicker(priorityRows);
-        document.getElementById("syncState").textContent = "Live";
+        const fifoView = computeFifoView(fifoRows);
+        renderFifo(fifoView);
+
+        const performanceView = derivePerformanceSummary(performanceRows);
+        renderPerformance(performanceView);
+
+        document.getElementById("tickerTrack").textContent = buildTicker(priorityRows, fifoView, performanceView);
+        setSyncState("Live");
       } catch (err){
         console.error(err);
-        document.getElementById("syncState").textContent = "Feed Error";
-        document.getElementById("priorityQueue").innerHTML = `<div class="empty">Could not load the published Google Sheets CSV feed.<br/>Check the published CSV URL and redeploy if needed.</div>`;
+        setSyncState("Feed Error");
+        document.getElementById("priorityQueue").innerHTML = `<div class="empty">Could not load one or more published Google Sheets CSV feeds.<br/>Check the published CSV URLs and refresh.</div>`;
+        document.getElementById("fifoContent").innerHTML = `<div class="empty">FIFO feed unavailable right now.</div>`;
+        document.getElementById("performanceTableWrap").innerHTML = `<div class="empty">Games Performance feed unavailable right now.</div>`;
+      } finally {
+        document.getElementById("lastSync").textContent = new Date().toLocaleTimeString([], {hour:'numeric', minute:'2-digit', second:'2-digit'});
       }
     }
 
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => activateTab(btn.dataset.tab));
+    });
+
+    activateTab("inventory");
     loadDashboard();
     setInterval(loadDashboard, CONFIG.refreshMs);
   </script>
