@@ -254,7 +254,7 @@
     .rank-value.green{color:#8ff0ae}
     .rank-value.yellow{color:#ffe07a}
 
-    .summary-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px}
+    .summary-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
     .summary-card .value{font-size:28px;font-weight:900;margin:6px 0 3px}
     .summary-card .label{font-size:10px;color:var(--muted);letter-spacing:.13em;text-transform:uppercase}
     .summary-card .sub{font-size:12px;color:var(--muted)}
@@ -421,6 +421,7 @@
             <div class="summary-card"><div class="label">Game Total Cost</div><div class="value">--</div><div class="sub">Waiting for feed</div></div>
             <div class="summary-card"><div class="label">Overall Crane Payout</div><div class="value">--</div><div class="sub">Waiting for feed</div></div>
             <div class="summary-card"><div class="label">Overall Merch Payout</div><div class="value">--</div><div class="sub">Waiting for feed</div></div>
+            <div class="summary-card"><div class="label">Average Labor Overall</div><div class="value">--</div><div class="sub">Waiting for feed</div></div>
           </div>
 
           <div class="rank-grid" id="top5Grid">
@@ -475,17 +476,6 @@
             </div>
           </div>
 
-          <div class="panel">
-            <div class="panel-head">
-              <div>
-                <h3 class="panel-title">Performance Matrix</h3>
-                <div class="panel-sub" id="performanceBoardSub">Custom summary plus full live sheet view</div>
-              </div>
-            </div>
-            <div class="panel-body perf-table-wrap">
-              <div id="performanceTableWrap"><div class="empty">Loading performance matrix…</div></div>
-            </div>
-          </div>
         </div>
       </section>
     </div>
@@ -790,6 +780,13 @@
         value: cellRef(rows, valueRef)
       })).filter(item => item.name || item.value);
     }
+    function firstCellRef(rows, refs){
+      for(const ref of refs){
+        const value = cellRef(rows, ref);
+        if(String(value || "").trim()) return value;
+      }
+      return "";
+    }
     function compactMetrics(items){
       return items.filter(item => item.key || item.value);
     }
@@ -808,18 +805,17 @@
       ]);
 
       const summary = {
-        gameTotalCost: cellRef(rows, "F13"),
+        gameTotalCost: firstCellRef(rows, ["E13", "F13"]),
         overallCranePayout: cellRef(rows, "I13"),
         overallMerchPayout: cellRef(rows, "K13"),
-        averageLabor: cellRef(rows, "F26")
+        averageLabor: firstCellRef(rows, ["E26", "F26"])
       };
 
       const bowling = compactMetrics([
         { key:"Revenue", value: cellRef(rows, "C18") },
         { key:"Labor %", value: cellRef(rows, "C19") },
         { key:"Labor $", value: cellRef(rows, "C20") },
-        { key:"Pin Sales", value: cellRef(rows, "C21") },
-        { key:"Average Labor Overall", value: cellRef(rows, "F26") }
+        { key:"Pin Sales", value: cellRef(rows, "C21") }
       ]);
 
       const repair = compactMetrics([
@@ -829,15 +825,15 @@
       const laserTag = compactMetrics([
         { key:"Sales", value: cellRef(rows, "K20") },
         { key:"Sched Hours", value: cellRef(rows, "K21") },
-        { key:"Labor $", value: cellRef(rows, "K22") },
-        { key:"Labor %", value: cellRef(rows, "K23") }
+        { key:"Labor $", value: firstCellRef(rows, ["K22", "K21"]) },
+        { key:"Labor %", value: firstCellRef(rows, ["K23", "K22"]) }
       ]);
 
       const gelBlaster = compactMetrics([
         { key:"Sales", value: cellRef(rows, "K25") },
         { key:"Sched Hours", value: cellRef(rows, "K26") },
-        { key:"Labor $", value: cellRef(rows, "K27") },
-        { key:"Labor %", value: cellRef(rows, "K28") }
+        { key:"Labor $", value: firstCellRef(rows, ["K27", "K26"]) },
+        { key:"Labor %", value: firstCellRef(rows, ["K28", "K27"]) }
       ]);
 
       const laborSections = [
@@ -845,22 +841,22 @@
           title:"XD",
           metrics: compactMetrics([
             { key:"Sales", value: cellRef(rows, "B31") },
-            { key:"Sched Hours", value: cellRef(rows, "C32") },
-            { key:"Labor $", value: cellRef(rows, "C33") },
-            { key:"Labor %", value: cellRef(rows, "C34") },
-            { key:"Repair", value: cellRef(rows, "C35") },
-            { key:"Supplies", value: cellRef(rows, "C36") }
+            { key:"Sched Hours", value: cellRef(rows, "B32") },
+            { key:"Labor $", value: cellRef(rows, "B33") },
+            { key:"Labor %", value: cellRef(rows, "B34") },
+            { key:"Repair", value: cellRef(rows, "B35") },
+            { key:"Supplies", value: cellRef(rows, "B36") }
           ])
         },
         {
           title:"Redemption",
           metrics: compactMetrics([
             { key:"Sales", value: cellRef(rows, "F31") },
-            { key:"Sched Hours", value: cellRef(rows, "G32") },
-            { key:"Labor $", value: cellRef(rows, "G33") },
-            { key:"Labor %", value: cellRef(rows, "G34") },
-            { key:"Repair", value: cellRef(rows, "G35") },
-            { key:"Supplies", value: cellRef(rows, "G36") }
+            { key:"Sched Hours", value: cellRef(rows, "F32") },
+            { key:"Labor $", value: cellRef(rows, "F33") },
+            { key:"Labor %", value: cellRef(rows, "F34") },
+            { key:"Repair", value: cellRef(rows, "F35") },
+            { key:"Supplies", value: cellRef(rows, "F36") }
           ])
         },
         {
@@ -986,7 +982,8 @@
         { label: percent2.name, value: percentValue(percent2.value), sub:"Revenue share highlight" },
         { label:"Game Total Cost", value: percentValue(view.summary.gameTotalCost), sub:"Executive sheet KPI" },
         { label:"Overall Crane Payout", value: percentValue(view.summary.overallCranePayout), sub:"Executive sheet KPI" },
-        { label:"Overall Merch Payout", value: percentValue(view.summary.overallMerchPayout), sub:"Executive sheet KPI" }
+        { label:"Overall Merch Payout", value: percentValue(view.summary.overallMerchPayout), sub:"Executive sheet KPI" },
+        { label:"Average Labor Overall", value: percentValue(view.summary.averageLabor), sub:"Executive sheet KPI" }
       ];
       document.getElementById("performanceMetrics").innerHTML = metrics.map(m => `
         <div class="summary-card">
@@ -1015,7 +1012,7 @@
         key:item.key,
         value:item.key.includes("$") || item.key.toLowerCase() === "sales" ? moneyValue(item.value) : (item.key.includes("%") ? percentValue(item.value) : (item.value || "—"))
       })));
-      document.getElementById("bowlingSub").textContent = view.summary.averageLabor ? `Average Labor Overall ${percentValue(view.summary.averageLabor)}` : "Live attraction metrics";
+      document.getElementById("bowlingSub").textContent = "Live attraction metrics";
 
       const laborGrid = document.getElementById("laborGrid");
       document.getElementById("laborCardCount").textContent = `${view.laborSections.length} cards`;
@@ -1038,10 +1035,6 @@
       }
 
       drawSalesBarChart(view.salesBoard);
-      document.getElementById("performanceBoardSub").textContent =
-        view.summary.gameTotalCost ? `Game Total Cost ${percentValue(view.summary.gameTotalCost)} • exact CSV cell mapping` : "Exact CSV cell mapping";
-
-      document.getElementById("performanceTableWrap").innerHTML = renderGenericTable(view.generic.headers, view.generic.records, 26);
     }
 
     function drawSalesBarChart(items){
@@ -1145,7 +1138,7 @@
         setSyncState("Feed Error");
         document.getElementById("priorityQueue").innerHTML = `<div class="empty">Could not load one or more published Google Sheets CSV feeds.<br/>Check the published CSV URLs and refresh.</div>`;
         document.getElementById("fifoContent").innerHTML = `<div class="empty">FIFO feed unavailable right now.</div>`;
-        document.getElementById("performanceTableWrap").innerHTML = `<div class="empty">Games Performance feed unavailable right now.</div>`;
+
       } finally {
         document.getElementById("lastSync").textContent = new Date().toLocaleTimeString([], {hour:'numeric', minute:'2-digit', second:'2-digit'});
       }
