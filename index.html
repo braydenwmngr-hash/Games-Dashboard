@@ -124,7 +124,7 @@
     }
     .left-col,.right-col{min-height:0;display:grid;gap:16px}
     .left-col{grid-template-rows:auto auto 1fr}
-    .right-col{grid-template-rows:auto 1fr}
+    .right-col{grid-template-rows:auto auto}
 
     .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
     .card,.panel{
@@ -233,6 +233,107 @@
     }
     .fifo-slot .slot-text{
       margin-top:12px;font-size:15px;line-height:1.22;font-weight:800;white-space:pre-wrap;word-break:break-word
+    }
+
+    .adjust-grid{
+      display:grid;
+      gap:12px;
+    }
+    .adjust-card{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      background:var(--glass-2);
+      padding:14px;
+      display:grid;
+      gap:10px;
+    }
+    .adjust-card.good{
+      box-shadow:inset 0 0 0 1px rgba(64,217,138,.14);
+      background:linear-gradient(180deg, rgba(64,217,138,.10), rgba(255,255,255,.03));
+    }
+    .adjust-card.watch{
+      box-shadow:inset 0 0 0 1px rgba(255,213,77,.14);
+      background:linear-gradient(180deg, rgba(255,213,77,.10), rgba(255,255,255,.03));
+    }
+    .adjust-card.alert{
+      box-shadow:inset 0 0 0 1px rgba(255,92,124,.16);
+      background:linear-gradient(180deg, rgba(255,92,124,.10), rgba(255,255,255,.03));
+    }
+    .adjust-top{
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:10px;
+      align-items:start;
+    }
+    .adjust-name{
+      font-size:18px;
+      font-weight:900;
+      line-height:1.1;
+    }
+    .adjust-payout{
+      font-size:28px;
+      font-weight:900;
+      line-height:1;
+    }
+    .adjust-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px 10px;
+      align-items:center;
+    }
+    .adjust-chip{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:7px 10px;
+      border-radius:999px;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+    }
+    .adjust-chip.good{
+      background:rgba(64,217,138,.18);
+      color:#b8ffd6;
+    }
+    .adjust-chip.watch{
+      background:rgba(255,213,77,.18);
+      color:#ffe899;
+    }
+    .adjust-chip.alert{
+      background:rgba(255,92,124,.18);
+      color:#ffb6c5;
+    }
+    .adjust-copy{
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.45;
+    }
+    .adjust-actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+    }
+    .adjust-box{
+      padding:10px 12px;
+      border-radius:14px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.06);
+    }
+    .adjust-box .k{
+      color:var(--muted);
+      font-size:10px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      margin-bottom:6px;
+    }
+    .adjust-box .v{
+      font-size:13px;
+      font-weight:800;
+      line-height:1.35;
     }
 
     .perf-layout{
@@ -349,6 +450,7 @@
       .fifo-row{grid-template-columns:1fr}
       .split-dual{grid-template-columns:1fr}
       .summary-grid{grid-template-columns:1fr}
+      .adjust-actions{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -374,7 +476,7 @@
         <div class="status-strip">
           <div class="pill"><span class="pulse-dot"></span><strong id="syncState">Live</strong></div>
           <div class="pill">Last Sync: <strong id="lastSync">--</strong></div>
-          <div class="pill">Sources: <strong>3 Google Sheets CSV Feeds</strong></div>
+          <div class="pill">Sources: <strong>4 Google Sheets CSV Feeds</strong></div>
           <div class="pill">Refresh: <strong>30s</strong></div>
         </div>
       </div>
@@ -457,6 +559,21 @@
               </div>
               <div class="panel-body">
                 <div id="fifoContent"><div class="empty">Loading FIFO feed…</div></div>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-head">
+                <div>
+                  <h3 class="panel-title">Crane Adjustments</h3>
+                  <div class="panel-sub">Highest payout to lowest • target band 18% to 26%</div>
+                </div>
+                <div class="small" id="craneAdjustmentsCount">0 cranes</div>
+              </div>
+              <div class="panel-body">
+                <div id="craneAdjustmentsWrap">
+                  <div class="empty">Loading crane adjustment feed…</div>
+                </div>
               </div>
             </div>
           </div>
@@ -549,6 +666,7 @@
       inventoryUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQu7HMKSw3Slo20XCcxff99jLjqKM955_AvMMyxLBvnRsgISC_SZo2niEpDv9jqwpMm7SGfAKfQW2S6/pub?gid=2026192315&single=true&output=csv",
       fifoUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQjM6aUUFaApVebMR47dtbf9OBRAs_C2mVYxXiwwA_Rn3LMDNkDh5oJWpNnkRnzsxNdGQ_4gXdKF53b/pub?gid=0&single=true&output=csv",
       performanceUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQp9U4ii7ptF2_UOjx9_j16h6TtV92iRZSLJL_UsaDWxl_AmXG8zHLRcf7ZlgVls52nAm4ybSESVV5x/pub?gid=0&single=true&output=csv",
+      craneAdjustmentsUrl: "https://docs.google.com/spreadsheets/d/e/2PACX-1vQp9U4ii7ptF2_UOjx9_j16h6TtV92iRZSLJL_UsaDWxl_AmXG8zHLRcf7ZlgVls52nAm4ybSESVV5x/pub?gid=1623071932&single=true&output=csv",
       refreshMs: 30000
     };
 
@@ -886,6 +1004,144 @@
       </div>`;
     }
 
+    function findHeaderKey(headers, candidates){
+      const lowerHeaders = headers.map(h => String(h || "").toLowerCase());
+      for(const candidate of candidates){
+        const foundIndex = lowerHeaders.findIndex(h => h.includes(candidate));
+        if(foundIndex >= 0) return headers[foundIndex];
+      }
+      return null;
+    }
+
+    function buildCraneAdjustmentAdvice(payout){
+      if(payout === null){
+        return {
+          tone: "watch",
+          status: "Needs Review",
+          action: "Check source row",
+          amount: "Verify payout value in the sheet",
+          copy: "This crane row is missing a readable payout value, so no adjustment recommendation can be generated yet."
+        };
+      }
+
+      if(payout < 18){
+        const diff = 18 - payout;
+        const amount =
+          diff >= 6 ? "Loosen 2 steps or increase winability by ~10%–15%" :
+          diff >= 3 ? "Loosen 1–2 steps or increase winability by ~6%–10%" :
+                      "Loosen 1 small step or increase winability by ~3%–5%";
+
+        return {
+          tone: "watch",
+          status: "Under Target",
+          action: "Make crane easier",
+          amount,
+          copy: "Payout is below your 18% floor, so this crane is likely too tight. Make a small positive adjustment, then retest 20–30 paid plays before changing it again."
+        };
+      }
+
+      if(payout <= 26){
+        return {
+          tone: "good",
+          status: "On Target",
+          action: "No major change",
+          amount: "Leave settings steady and monitor",
+          copy: "This crane is inside your 18%–26% target band. Keep it where it is unless you are seeing unusual win rhythm or guest complaints."
+        };
+      }
+
+      const diff = payout - 26;
+      const amount =
+        diff >= 8 ? "Tighten 2 steps or reduce winability by ~10%–15%" :
+        diff >= 4 ? "Tighten 1–2 steps or reduce winability by ~6%–10%" :
+                    "Tighten 1 small step or reduce winability by ~3%–5%";
+
+      return {
+        tone: diff >= 8 ? "alert" : "watch",
+        status: diff >= 8 ? "High Payout" : "Over Target",
+        action: "Make crane harder",
+        amount,
+        copy: "Payout is above your 26% ceiling, so this crane is likely paying too freely. Tighten gradually and retest 20–30 paid plays before making another move."
+      };
+    }
+
+    function parseCraneAdjustments(rows){
+      const generic = parseGenericDataset(rows);
+      const headers = generic.headers;
+      const records = generic.records;
+
+      const nameKey = findHeaderKey(headers, [
+        "crane", "machine", "game", "name"
+      ]);
+
+      const payoutKey = findHeaderKey(headers, [
+        "payout", "payout %", "payout percentage", "percentage", "percent", "cost %", "cost percentage"
+      ]);
+
+      if(!nameKey || !payoutKey) return [];
+
+      return records
+        .map(record => {
+          const name = String(record[nameKey] || "").trim();
+          const rawPayout = String(record[payoutKey] || "").trim();
+          const payout = safeNumber(rawPayout);
+          const advice = buildCraneAdjustmentAdvice(payout);
+
+          return {
+            name,
+            rawPayout,
+            payout,
+            ...advice
+          };
+        })
+        .filter(item => item.name)
+        .sort((a, b) => {
+          const av = a.payout ?? -9999;
+          const bv = b.payout ?? -9999;
+          return bv - av;
+        });
+    }
+
+    function renderCraneAdjustments(items){
+      const root = document.getElementById("craneAdjustmentsWrap");
+      const countEl = document.getElementById("craneAdjustmentsCount");
+      if(countEl) countEl.textContent = `${items.length} crane${items.length === 1 ? "" : "s"}`;
+
+      if(!items.length){
+        root.innerHTML = `<div class="empty">No readable crane adjustment rows were found in this feed yet.</div>`;
+        return;
+      }
+
+      root.innerHTML = `<div class="adjust-grid">
+        ${items.map(item => `
+          <div class="adjust-card ${escapeHtml(item.tone)}">
+            <div class="adjust-top">
+              <div class="adjust-name">${escapeHtml(item.name)}</div>
+              <div class="adjust-payout">${escapeHtml(item.rawPayout || "--")}</div>
+            </div>
+
+            <div class="adjust-meta">
+              <span class="adjust-chip ${escapeHtml(item.tone)}">${escapeHtml(item.status)}</span>
+              <span class="adjust-chip">Target 18%–26%</span>
+            </div>
+
+            <div class="adjust-copy">${escapeHtml(item.copy)}</div>
+
+            <div class="adjust-actions">
+              <div class="adjust-box">
+                <div class="k">Adjustment Direction</div>
+                <div class="v">${escapeHtml(item.action)}</div>
+              </div>
+              <div class="adjust-box">
+                <div class="k">Suggested Amount</div>
+                <div class="v">${escapeHtml(item.amount)}</div>
+              </div>
+            </div>
+          </div>
+        `).join("")}
+      </div>`;
+    }
+
     function colToIndex(col){
       let index = 0;
       const upper = String(col).toUpperCase().trim();
@@ -908,17 +1164,6 @@
         name: cellRef(rows, nameRef),
         value: cellRef(rows, valueRef)
       })).filter(x => x.name || x.value);
-    }
-
-    function readExactMetricBlock(rows, labelsCol, valueCol, startRow, endRow){
-      const out = [];
-      for(let r = startRow; r <= endRow; r++){
-        const key = cellRef(rows, `${labelsCol}${r}`);
-        const value = cellRef(rows, `${valueCol}${r}`);
-        if(!key && !value) continue;
-        out.push({ key, value });
-      }
-      return out;
     }
 
     function readColumnSectionFixed(rows, title, labelColLetter, valueColLetter, startRow, endRow){
@@ -1064,10 +1309,6 @@
     function percentToNumber(value){
       const n = safeNumber(value);
       return n === null ? null : n;
-    }
-
-    function moneyToNumber(value){
-      return safeNumber(value);
     }
 
     function buildManagerInsights(view){
@@ -1312,10 +1553,11 @@
     async function loadDashboard(){
       setSyncState("Syncing");
       try{
-        const [inventoryRows, fifoRows, performanceRows] = await Promise.all([
+        const [inventoryRows, fifoRows, performanceRows, craneAdjustRows] = await Promise.all([
           fetchCsv(CONFIG.inventoryUrl),
           fetchCsv(CONFIG.fifoUrl),
-          fetchCsv(CONFIG.performanceUrl)
+          fetchCsv(CONFIG.performanceUrl),
+          fetchCsv(CONFIG.craneAdjustmentsUrl)
         ]);
 
         const summary = extractSummary(inventoryRows);
@@ -1340,6 +1582,9 @@
         const fifoView = parseFifoSheet(fifoRows);
         renderFifo(fifoView);
 
+        const craneAdjustments = parseCraneAdjustments(craneAdjustRows);
+        renderCraneAdjustments(craneAdjustments);
+
         const perfView = parsePerformance(performanceRows);
         renderPerformance(perfView);
 
@@ -1349,6 +1594,7 @@
         setSyncState("Feed Error");
         document.getElementById("priorityQueue").innerHTML = `<div class="empty">Could not load one or more published Google Sheets CSV feeds.<br/>Check the published CSV URLs and refresh.</div>`;
         document.getElementById("fifoContent").innerHTML = `<div class="empty">FIFO feed unavailable right now.</div>`;
+        document.getElementById("craneAdjustmentsWrap").innerHTML = `<div class="empty">Crane adjustment feed unavailable right now.</div>`;
         document.getElementById("managerInsights").innerHTML = `<div class="insight-tile alert"><div class="insight-kicker">Feed Error</div><div class="insight-headline">Performance insights unavailable</div><div class="insight-copy">Check the published performance CSV feed and refresh the board.</div></div>`;
       } finally {
         document.getElementById("lastSync").textContent = new Date().toLocaleTimeString([], {hour:'numeric', minute:'2-digit', second:'2-digit'});
